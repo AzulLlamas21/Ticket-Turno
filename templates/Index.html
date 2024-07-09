@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Ticket Turno</title>
+        <link rel="shorcut icon" type="image/png"  href="{{ url_for('static', filename='img/logo_favicon.png') }}">
+        <link rel="stylesheet" type="text/css"  href="{{ url_for('static',filename='bootstrap-5.3.2/dist/css/bootstrap.css') }}">
+        <link rel="stylesheet" type="text/css"  href="{{ url_for('static',filename='css/estilo.css') }}">
+        <link rel="stylesheet" type="text/css"  href="{{ url_for('static',filename='css/ticket.css') }}">
+        
+        <!-- Sweet alert Js -->
+        <script src="{{url_for('static', filename='js/sweetalert2.all.min.js')}}"></script>
+        <link rel="stylesheet" type="text/css"  href="{{ url_for('static',filename='css/sweetalert2.min.css') }}">
+    </head>
+    <body>
+        <div class="container">
+            <form action="{{ url_for('generar_ticket') }}" method="post" onsubmit="return valida_forma();">
+                <div class="head">
+                    <img src="{{ url_for('static', filename='img/logo_favicon.png') }}">
+                    <h1>Ticket de Turno</h1>
+                </div> 
+
+                <div class="cont">
+                    <div class="row">
+                        <label for="f_nc">Nombre completo de quien realizará el trámite:</label>
+                        <input type="text" name="f_nc" id="f_nc" placeholder="Ingrese nombre completo">
+                    </div>
+
+                    <div class="row">
+                        <label for="f_curp">CURP:</label>
+                        <input class="mayusculas" type="text" name="f_curp" id="f_curp" placeholder="Ingrese CURP">
+                    </div>
+                </div>
+
+                <div class="cont">
+                    <div class="row">
+                        <label for="f_nombre">Nombre:</label>
+                        <input type="text" name="f_nombre" id="f_nombre" placeholder="Ingrese nombre">
+                    </div>
+        
+                    <div class="row">
+                        <label for="f_paterno">Paterno:</label>
+                        <input type="text" name="f_paterno" id="f_paterno" placeholder="Ingrese apellido paterno">
+                    </div>
+
+                    <div class="row">
+                        <label for="f_materno">Materno:</label>
+                        <input type="text" name="f_materno" id="f_materno" placeholder="Ingrese apellido materno">
+                    </div>
+                </div>
+
+                <div class="cont">
+                    <div class="row">
+                        <label for="f_telefono">Teléfono:</label>
+                        <input type="tel" name="f_telefono" id="f_telefono" placeholder="Ingrese teléfono">
+                    </div>
+        
+                    <div class="row">
+                        <label for="f_celular">Celular:</label>
+                        <input type="tel" name="f_celular" id="f_celular" placeholder="Ingrese celular">
+                    </div>
+
+                    <div class="row">
+                        <label for="f_correo">Correo:</label>
+                        <input type="text" name="f_correo" id="f_correo" placeholder="Ingrese correo">
+                    </div>
+                </div>
+    
+                <div class="row">
+                    <label for="f_nivel">¿Nivel al que desea ingresar o que ya cursa el alumno?</label>
+                    <select name="f_nivel" id="f_nivel">
+                        <option value="0">Selección:</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                    </select>
+                </div>
+
+                <div class="row">
+                    <label for="f_mun">Municipio donde desea estudie el alumno:</label>
+                    <select name="f_mun" id="f_mun">
+                        <option value="0">Selección:</option>
+                        <option value="1">Saltillo</option>
+                        <option value="2">Arteaga</option>
+                        <option value="3">Ramos Arizpe</option>
+                        <option value="4">Monclova</option>
+                        <option value="5">Torreón</option>
+                        <option value="6">Acuña</option>
+                        <option value="7">Ocampo</option>
+                        <option value="8">Piedras Negras</option>
+                    </select>
+                </div>
+
+                <div class="row">
+                    <label for="f_asunto">Seleccione el asunto que va a tratar:</label>
+                    <select name="f_asunto" id="f_asunto">
+                        <option value="0">Selección:</option>
+                        <option value="1">Ingreso</option>
+                        <option value="2">Egreso</option>
+                        <option value="3">Pago de Inscripción</option>
+                        <option value="4">Selección de Horario</option>
+                        <option value="5">Recoger papelería</option>
+                    </select>
+                </div>
+    
+                <div class="row2">
+                    <input id="boton" type="submit" value="Generar Turno">
+                </div>
+
+                <div class="footer">
+                    <img id="barras" src="{{ url_for('static', filename='img/barras.png') }}">
+                    <img id="qr" src="{{ url_for('static', filename='img/qr.png') }}">
+                </div> 
+                    
+            </form>
+        </div>
+
+        <script src="{{url_for('static', filename='bootstrap-5.3.2/dist/js/bootstrap.bundle.min.js')}}"></script>
+        <script src="{{url_for('static', filename='js/script.js')}}"></script> 
+    </body>
+</html>

@@ -1,0 +1,115 @@
+*{ 
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+body{
+    background: linear-gradient(to top, #7d5689, #b89cd7);
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.container{
+    background: #ffffff80;
+    box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.384);
+    border-radius: 10px;
+    width: 80%;
+    height: auto;
+    margin: 20px auto;
+    padding: 15px;
+}
+
+.head{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 10px;
+    margin: 5px 10px;
+    height: 20vh;
+}
+
+.logo{
+    position: absolute;
+    left: 10px;
+}
+
+.head img{
+    max-width: 80px;
+}
+
+.title{
+    text-align: center;
+}
+
+h1, h2{
+    margin: 0;
+    font-weight: bold;
+    color: black;
+}
+
+h2{
+    font-size: 18px;
+}
+
+.row{
+    font-size: 18px;
+    padding-top: 15px;
+    padding-left: 6%;
+    padding-right: 2%;
+}
+
+p{
+    font-size: 16px;
+}
+
+.footer{
+    padding: 10px 10px;
+    margin: 5px 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.footer img{
+    width: 20%;
+    margin:auto;
+}
+
+.row2{
+    padding: auto;
+    padding-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+button{
+    background-color: rgb(105, 103, 103);
+    color:#fff;
+    font-weight: bold;
+    font-size: 25px;
+    width: 25%;
+    height: 10%;
+    padding: 10px 10px;
+    margin: 5px 10px;
+    border: none;
+    border-radius: 6px;
+}
+
+button:hover{
+    background-color: darkgrey;color:#fff;
+    color: black;
+    border: 1px solid rgb(105, 103, 103);
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .footer img{
+        width: 50%;
+        margin: 5px 10px;
+    }
+
+    button{
+        width: 85%;
+    }
+}

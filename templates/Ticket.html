@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Ticket Turno</title>
+        <!-- Tus enlaces a CSS y otros recursos -->
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap-5.3.2/dist/css/bootstrap.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/estilo.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/ticket.css') }}">
+        <!-- SweetAlert2 -->
+        <script src="{{ url_for('static', filename='js/sweetalert2.all.min.js') }}"></script>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/sweetalert2.min.css') }}">
+    </head>
+    <body>
+        <div class="container">
+            <div class="head">
+                <div class="logo">
+                    <img src="{{ url_for('static', filename='img/logo_favicon.png') }}">
+                </div>
+                <div class="title">
+                    <h1>Turno</h1>
+                    <h2>Datos Ingresados</h2>
+                </div>
+            </div>
+    
+            <div class="row">
+                <div id="result"></div>
+            </div>
+    
+            <div class="footer">
+                <img id="barras" src="{{ url_for('static', filename='img/barras.png') }}">
+                <img id="qr" src="{{ url_for('static', filename='img/qr.png') }}">
+            </div>
+        </div>
+    
+        <script src="{{ url_for('static', filename='js/result.js') }}"></script>    
+    </body>
+</html>
