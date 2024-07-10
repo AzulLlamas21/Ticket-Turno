@@ -1,3 +1,2 @@
-No se envio la carpeta env y __pycache__
+Se utilizó pymysql
 
-Mas no se instalo nada para el uso de este proyecto
