@@ -25,11 +25,29 @@ class Formulario:
         conexion.conn.close()
         return formularios
 
-    def obtener_formulario_por_no_turno(self, no_turno):
+    def obtener_formulario_por_no_turno(self, no_turno, id_mun):
         conexion = Database.Database()
         formulario = None
         with conexion.cursor as cursor:
-            cursor.execute("SELECT * FROM formulario WHERE no_turno = %s", (no_turno))
+            cursor.execute("SELECT * FROM formulario WHERE no_turno = %s and id_mun = %s", (no_turno, id_mun))
+            formulario = cursor.fetchone()
+        conexion.conn.close()
+        return formulario
+    
+    def obtener_formulario_por_nombre(self, nombre, paterno, materno):
+        conexion = Database.Database()
+        formulario = None
+        with conexion.cursor as cursor:
+            cursor.execute("SELECT * FROM formulario WHERE nombre = %s and paterno = %s and materno = %s", (nombre, paterno, materno))
+            formulario = cursor.fetchone()
+        conexion.conn.close()
+        return formulario
+    
+    def obtener_formulario_por_curp(self, curp):
+        conexion = Database.Database()
+        formulario = None
+        with conexion.cursor as cursor:
+            cursor.execute("SELECT * FROM formulario WHERE curp = %s", (curp))
             formulario = cursor.fetchone()
         conexion.conn.close()
         return formulario
@@ -38,9 +56,16 @@ class Formulario:
         conexion = Database.Database()
         with conexion.cursor as cursor:
             try:
-                sql = """INSERT INTO formulario(curp, nombre, paterno, materno, telefono, celular, correo, id_nivel, id_mun, id_asunto, estado)
-                         VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
-                vals = (obj_form.__curp, obj_form.__nombre, obj_form.__paterno, obj_form.__materno, obj_form.__telefono, obj_form.__celular, obj_form.__correo, obj_form.__id_nivel, obj_form.__id_mun, obj_form.__id_asunto, obj_form.__estado)
+                cursor.execute("SELECT no_turno FROM formulario WHERE id_mun = %s ORDER BY no_turno DESC LIMIT 1", (obj_form.__id_mun))
+                result = cursor.fetchone()
+                no_turno = 1
+                if result is not None:
+                    no_turno = result[0] + 1
+                sql = """INSERT INTO formulario(no_turno, curp, nombre, paterno, materno, telefono, celular, correo, id_nivel, id_mun, id_asunto, estado)
+                         VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+                
+                vals = (no_turno, obj_form.__curp, obj_form.__nombre, obj_form.__paterno, obj_form.__materno, obj_form.__telefono, obj_form.__celular, obj_form.__correo, obj_form.__id_nivel, obj_form.__id_mun, obj_form.__id_asunto, obj_form.__estado)
+                print(vals)
                 affected = cursor.execute(sql, vals)
                 conexion.conn.commit()
                 return affected
@@ -53,13 +78,13 @@ class Formulario:
             finally:
                 conexion.conn.close()
 
-    def eliminar_formulario(self, no_turno):
+    def eliminar_formulario(self, no_turno, id_mun):
         conexion = Database.Database()
         affected = 0
         with conexion.cursor as cursor:
             try:
-                sql = "DELETE FROM formulario WHERE no_turno = %s"
-                vals = (no_turno)
+                sql = "DELETE FROM formulario WHERE no_turno = %s and id_mun = %s"
+                vals = (no_turno, id_mun)
                 affected = cursor.execute(sql, vals)
                 conexion.conn.commit()
                 return affected
@@ -77,9 +102,9 @@ class Formulario:
         with conexion.cursor as cursor:
             try:
                 sql = """UPDATE formulario SET curp = %s, nombre = %s, paterno = %s, materno = %s, telefono = %s, 
-                        celular = %s, correo = %s, id_nivel = %s, id_mun = %s, id_asunto = %s, estado = %s 
-                        WHERE no_turno = %s"""
-                vals = (obj_form.__curp, obj_form.__nombre, obj_form.__paterno, obj_form.__materno, obj_form.__telefono, obj_form.__celular, obj_form.__correo, obj_form.__id_nivel, obj_form.__id_mun, obj_form.__id_asunto, obj_form.__estado, obj_form.__no_turno)
+                        celular = %s, correo = %s, id_nivel = %s, id_asunto = %s, estado = %s 
+                        WHERE no_turno = %s and id_mun = %s"""
+                vals = (obj_form.__curp, obj_form.__nombre, obj_form.__paterno, obj_form.__materno, obj_form.__telefono, obj_form.__celular, obj_form.__correo, obj_form.__id_nivel, obj_form.__id_asunto, obj_form.__estado, obj_form.__no_turno, obj_form.__id_mun)
                 affected = cursor.execute(sql, vals)
                 conexion.conn.commit()
                 return affected

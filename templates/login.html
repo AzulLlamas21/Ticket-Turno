@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Iniciar Sesión</title>
+        <link rel="stylesheet" href="{{ url_for('static',filename='css/sweetalert2.min.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static',filename='css/login.css') }}">
+    </head>
+    <body id="LoginForm">
+        <div class="container" style="margin-top:70px;">
+            <div class="login-form">
+                <div class="main-div">
+                    <div class="panel">
+                        <h2>Iniciar Sesión</h2>
+                        <p>Por favor escirba su usuario y contraseña</p>
+                    </div>
+    
+                    <form id="login" method="post">
+                        <div class="row">
+                            <label for="f_user">Usuario:</label>
+                            <input type="text" class="form-control" id="f_user" name="f_user" placeholder="Usuario">
+                        </div>
+                        <div class="row">
+
+                            <input type="password" class="form-control" id="f_pwd" name="f_pwd" placeholder="Contraseña">
+                        </div>
+                        <div class="row2">
+                            <button type="submit" class="btn btn-primary" name='verifica' id='verifica'>Login</button>
+                        </div>
+                    </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+
+        <script src="{{url_for('static', filename='bootstrap-5.3.2/dist/js/bootstrap.bundle.min.js')}}"></script>
+        <script src="{{url_for('static', filename='js/login.js')}}"></script> 
+    </body>
+</html>

@@ -13,7 +13,7 @@
         <script src="{{url_for('static', filename='js/sweetalert2.all.min.js')}}"></script>
         <link rel="stylesheet" type="text/css"  href="{{ url_for('static',filename='css/sweetalert2.min.css') }}">
     </head>
-    <body>
+    <body id="Formulario">
         <div class="container">
             <form action="{{ url_for('generar_ticket') }}" method="post" onsubmit="return valida_forma();">
                 <div class="head">
@@ -112,11 +112,6 @@
     
                 <div class="row2">
                     <input id="boton" type="submit" value="Generar Turno">
-                </div>
-
-                <div class="footer">
-                    <img id="barras" src="{{ url_for('static', filename='img/barras.png') }}">
-                    <img id="qr" src="{{ url_for('static', filename='img/qr.png') }}">
                 </div> 
                     
             </form>
