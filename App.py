@@ -11,6 +11,10 @@ app = Flask(__name__)
 def index():
     return render_template('Index.html')
 
+@app.route('/login')
+def login():
+    return render_template('login.html')
+
 @app.route('/generar_ticket', methods=['POST'])
 def generar_ticket():
     if request.method == 'POST':

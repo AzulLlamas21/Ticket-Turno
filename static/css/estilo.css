@@ -56,6 +56,22 @@ h1{
     justify-content: center;
 }
 
+.row3{
+    padding: 10px;
+    padding-top: 20px;
+
+    height: auto;
+    display: flex;
+    justify-content: center;
+}
+
+.update-delete-buttons{
+    padding: auto;
+    padding-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
 .footer{
     padding: 10px 10px;
     margin: 5px 10px;
@@ -69,7 +85,7 @@ h1{
     margin:auto;
 }
 
-input[type="text"], input[type="tel"], input[type="email"], select{
+input[type="text"], input[type="tel"], select{
     padding: 10px 10px;
     margin: 5px 10px;
     border: 1px solid rgb(154, 154, 155);
@@ -87,16 +103,17 @@ select{
     display: flex;
 }
 
-.cont input[type="text"], input[type="tel"], input[type="email"]{
+.cont input[type="text"], input[type="tel"]{
     margin: auto;
     width: 100%;
 }
 
-input[type="submit"]{
+input[type="submit"], #btn{
     background-color: darkgrey;
     font-weight: bold;
     font-size: 25px;
-    width: 25%;
+    width: auto;
+    min-width: 25%;
     height: 10%;
     padding: 10px 10px;
     margin: 5px 10px;
@@ -104,7 +121,15 @@ input[type="submit"]{
     border-radius: 6px;
 }
 
-input[type="submit"]:hover{
+#btn{
+    font-size: 20px;
+    width: auto;
+    height: auto;
+    padding: 20px 10px;
+    margin: 5px 20px;
+}
+
+input[type="submit"]:hover, #btn{
     background-color: rgb(105, 103, 103);
     color:#fff;
     cursor: pointer;
@@ -121,12 +146,20 @@ input[type="submit"]:hover{
         width: 90%;
     }
 
-    input[type="text"], input[type="tel"], input[type="email"]{
+    input[type="text"], input[type="tel"]{
         width: 100%;
     }
 
     select{
         width: 90%;
+    }
+
+    .row3{
+        margin-left: 20%;
+    } 
+    .update-delete-buttons{
+        display: flex;
+        justify-content: center;
     }
 
     input[type="submit"]{

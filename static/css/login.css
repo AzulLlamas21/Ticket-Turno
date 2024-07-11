@@ -16,7 +16,7 @@ body{
     width: 80%;
     height: auto;
     margin: 50px auto;
-    padding: 15px;
+    padding: 10%;
 }
 
 .head{
@@ -27,9 +27,11 @@ body{
     align-items: center;
 }
 
-h1{
+h2, p{
     color: black;
     text-align: center;
+    display: flex;
+    justify-content: center;
 }
 
 .head img{

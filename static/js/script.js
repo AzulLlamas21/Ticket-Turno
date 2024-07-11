@@ -164,3 +164,25 @@ let mensaje = (tipo, titulo, texto, liga) => {
         footer: liga
     });
 }
+
+function generarPDF() {
+    // Lógica para generar PDF
+    console.log("Generando PDF...");
+}
+
+function buscar() {
+    // Lógica para buscar por nombre completo o CURP
+    // Si se encuentra resultado, mostrar botones de actualizar y eliminar
+    document.getElementById('update-delete-buttons').style.display = 'block';
+    console.log("Buscando...");
+}
+
+function actualizar() {
+    // Lógica para actualizar
+    console.log("Actualizando...");
+}
+
+function eliminar() {
+    // Lógica para eliminar
+    console.log("Eliminando...");
+}
