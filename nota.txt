@@ -1,2 +1,7 @@
 Se utilizó pymysql
 
+
+
+
+set PYTHONPATH=C:\VERANOS2024\flask\ticketTurno
+python test\test_Usuarios.py

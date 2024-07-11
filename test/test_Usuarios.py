@@ -59,4 +59,25 @@ from datetime import datetime,date,time
 #-------------------EXISTE-------------------      
 cuantos = Usuarios.existe_usuario('azul')
 print(cuantos)
- 
+
+#-------------------VERIFICAR CREDENCIALES---------------
+print("\n=================verificar=================\n")
+
+usuario_correcto = 'a'
+contrasena_correcta = 'azul'
+#usuario_incorrecto = 'wrong_user'
+#contrasena_incorrecta = 'wrong_password'
+
+# Verificar usuario correcto
+usuario = Usuarios.verificar_credenciales(usuario_correcto, contrasena_correcta)
+if usuario:
+    print("Test usuario correcto: PASSED")
+else:
+    print("Test usuario correcto: FAILED")
+
+# Verificar usuario incorrecto
+#usuario = Usuarios.verificar_credenciales(usuario_incorrecto, contrasena_incorrecta)
+#if usuario:
+#    print("Test usuario incorrecto: FAILED")
+#else:
+#    print("Test usuario incorrecto: PASSED")

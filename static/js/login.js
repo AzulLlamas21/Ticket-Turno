@@ -1,67 +1,55 @@
-const pattern_tel = /^[0-9]{10}?$/;
+document.getElementById('login').addEventListener('submit', function(event) {
+    let usuario = document.getElementById('f_user').value.trim();
+    let contrasena = document.getElementById('f_pwd').value.trim();
 
-function valida_forma() {
-    let js_nc = getTextInputById("f_nc");
-    let js_curp = getTextInputById("f_curp");
-
-    if (js_nc.length <= 0) {
-        mensaje('warning', 'NOMBRE', 'El dato Nombre no puede ir vacío!', '<a href="">Necesitas ayuda?</a>');
+    if (usuario.length <= 0) {
+        mensaje('warning', 'Usuario', 'El campo de usuario no puede estar vacío.', '<a href="">Necesitas ayuda?</a>');
+        event.preventDefault();
         return false;
-    } 
+    }
+
+    if (contrasena.length <= 0) {
+        mensaje('warning', 'Contraseña', 'El campo de contraseña no puede estar vacío.', '<a href="">Necesitas ayuda?</a>');
+        event.preventDefault();
+        return false;
+    }
     
-    else if (js_nc.length < 6) {
-        mensaje('error', 'ERROR: NOMBRE', 'El dato Nombre debe tener al menos 6 caracteres. Ejemplo: Sue Kim', '<a href="">Necesitas ayuda?</a>');
+    // Validación básica del formulario
+    if (usuario.length <= 0 || contrasena.length <= 0) {
+        mensaje('warning', 'Campos vacíos', 'Por favor, complete todos los campos.', '<a href="">Necesitas ayuda?</a>');
         return false;
-    } 
-    
-    if (js_curp.length <= 0) {
-        mensaje('warning', 'CURP', 'Olvido escribir el CURP!', '<a href="">Necesitas ayuda?</a>');
-        return false;
-    } 
-    
-    else if (!pattern_curp.test(js_curp)) {
-        mensaje('error', 'ERROR: CURP', 'El dato CURP no cumple con los requisitos! Ejemplo: LATA011228MCLLRZA2', '<a href="">Necesitas ayuda?</a>');
-        return false;
-    } 
+    }
 
-    let data = {
-        nc: js_nc,
-        curp: js_curp
-    };
-
-    fetch('/generar_ticket', {
+    // Realiza la solicitud POST al servidor Flask para verificar las credenciales
+    fetch('/login', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json'
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify({f_user: usuario, f_pwd: contrasena})
     })
     .then(response => {
         if (!response.ok) {
             throw new Error('Error en la solicitud');
         }
-        return response.text(); // Cambia a text() porque estamos redirigiendo
+        return response.json();
     })
-    .then(result => {
-        console.log(result);
-        // Redirecciona directamente a la página de ticket
-        let url = new URL('/ticket', window.location.origin);
-        Object.keys(data).forEach(key => url.searchParams.append(key, data[key]));
-        window.location.href = url;
+    .then(data => {
+        if (data.redirect) {
+            window.location.href = data.redirect;  // Redirige si las credenciales son correctas
+        } else {
+            mensaje('error', 'Error de inicio de sesión', data.message, '');  // Muestra mensaje de error si las credenciales son incorrectas
+        }
     })
     .catch(error => {
         console.error('Error:', error);
-    });
+        mensaje('error', 'Error de conexión', 'Hubo un problema al intentar iniciar sesión.', '');
+    });       
     
+    return true;
+});
 
-    return false; 
-}
-
-let getTextInputById = (id) => {
-    return document.getElementById(id).value.trim();
-}
-
-let mensaje = (tipo, titulo, texto, liga) => {
+function mensaje(tipo, titulo, texto, liga) {
     Swal.fire({
         icon: tipo,
         title: titulo,

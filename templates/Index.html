@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ticket Turno</title>
-    <link rel="shorcut icon" type="image/png" href="{{ url_for('static', filename='img/logo_favicon.png') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='bootstrap-5.3.2/dist/css/bootstrap.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/estilo.css') }}">
+    <link rel="shortcut icon" type="image/png" href="{{ url_for('static', filename='img/logo_favicon.png') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap-5.3.2/dist/css/bootstrap.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/estilo.css') }}">
     <!-- Sweet alert Js -->
-    <script src="{{url_for('static', filename='js/sweetalert2.all.min.js')}}"></script>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/sweetalert2.min.css') }}">
+    <script src="{{ url_for('static', filename='js/sweetalert2.all.min.js') }}"></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/sweetalert2.min.css') }}">
 </head>
 <body id="Formulario">
     <div class="container">
@@ -17,7 +17,7 @@
             <div class="head">
                 <img src="{{ url_for('static', filename='img/logo_favicon.png') }}">
                 <h1>Ticket de Turno</h1>
-            </div> 
+            </div>
 
             <div class="cont">
                 <div class="row">
@@ -36,7 +36,7 @@
                     <label for="f_nombre">Nombre:</label>
                     <input type="text" name="f_nombre" id="f_nombre" placeholder="Ingrese nombre">
                 </div>
-    
+
                 <div class="row">
                     <label for="f_paterno">Paterno:</label>
                     <input type="text" name="f_paterno" id="f_paterno" placeholder="Ingrese apellido paterno">
@@ -53,7 +53,7 @@
                     <label for="f_telefono">Teléfono:</label>
                     <input type="tel" name="f_telefono" id="f_telefono" placeholder="Ingrese teléfono">
                 </div>
-    
+
                 <div class="row">
                     <label for="f_celular">Celular:</label>
                     <input type="tel" name="f_celular" id="f_celular" placeholder="Ingrese celular">
@@ -65,55 +65,61 @@
                 </div>
             </div>
 
-            <div class="row">
-                <label for="f_nivel">¿Nivel al que desea ingresar o que ya cursa el alumno?</label>
-                <select name="f_nivel" id="f_nivel">
-                    <option value="0">Selección:</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                    <option value="9">9</option>
-                </select>
+            <div class="cont">
+                <div class="row">
+                    <label for="f_nivel">¿Nivel al que desea ingresar o que ya cursa el alumno?</label>
+                    <select name="f_nivel" id="f_nivel">
+                        <option value="0">Selección:</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                    </select>
+                </div>
             </div>
 
-            <div class="row">
-                <label for="f_mun">Municipio donde desea estudie el alumno:</label>
-                <select name="f_mun" id="f_mun">
-                    <option value="0">Selección:</option>
-                    <option value="1">Saltillo</option>
-                    <option value="2">Arteaga</option>
-                    <option value="3">Ramos Arizpe</option>
-                    <option value="4">Monclova</option>
-                    <option value="5">Torreón</option>
-                    <option value="6">Acuña</option>
-                    <option value="7">Ocampo</option>
-                    <option value="8">Piedras Negras</option>
-                </select>
+            <div class="cont">
+                <div class="row">
+                    <label for="f_mun">Municipio donde desea estudie el alumno:</label>
+                    <select name="f_mun" id="f_mun">
+                        <option value="0">Selección:</option>
+                        <option value="1">Saltillo</option>
+                        <option value="2">Arteaga</option>
+                        <option value="3">Ramos Arizpe</option>
+                        <option value="4">Monclova</option>
+                        <option value="5">Torreón</option>
+                        <option value="6">Acuña</option>
+                        <option value="7">Ocampo</option>
+                        <option value="8">Piedras Negras</option>
+                    </select>
+                </div>
             </div>
 
-            <div class="row">
-                <label for="f_asunto">Seleccione el asunto que va a tratar:</label>
-                <select name="f_asunto" id="f_asunto">
-                    <option value="0">Selección:</option>
-                    <option value="1">Ingreso</option>
-                    <option value="2">Egreso</option>
-                    <option value="3">Pago de Inscripción</option>
-                    <option value="4">Selección de Horario</option>
-                    <option value="5">Recoger papelería</option>
-                </select>
+            <div class="cont">
+                <div class="row">
+                    <label for="f_asunto">Seleccione el asunto que va a tratar:</label>
+                    <select name="f_asunto" id="f_asunto">
+                        <option value="0">Selección:</option>
+                        <option value="1">Ingreso</option>
+                        <option value="2">Egreso</option>
+                        <option value="3">Pago de Inscripción</option>
+                        <option value="4">Selección de Horario</option>
+                        <option value="5">Recoger papelería</option>
+                    </select>
+                </div>
             </div>
 
-            <div class="row2">
-                <input id="boton" type="submit" value="Generar Turno">
-            </div> 
+            <div class="row3">
+                <button id="btn" class="btn_turno" type="submit">Generar Turno</button>
+            </div>
         </form>
 
-        <div class="row2">
+        <div class="row3">
             <!-- Botones adicionales -->
             <div class="additional-buttons">
                 <button id="btn" class="btn_login" onclick="location.href='{{ url_for('login') }}'">Iniciar Sesión</button>
@@ -121,17 +127,19 @@
                 <input type="text" id="buscar" placeholder="Buscar por nombre completo o CURP">
                 <button id="btn" class="btn_buscar" onclick="buscar()">Buscar</button>
             </div>
+        </div>
 
+        <div class="row3">
             <!-- Botones de actualizar y eliminar ocultos -->
             <div id="update-delete-buttons" style="display: none;">
                 <button id="btn" class="btn_actualizar" onclick="actualizar()">Actualizar</button>
                 <button id="btn" class="btn_eliminar" onclick="eliminar()">Eliminar</button>
             </div>
         </div>
-        
+
     </div>
 
-    <script src="{{url_for('static', filename='bootstrap-5.3.2/dist/js/bootstrap.bundle.min.js')}}"></script>
-    <script src="{{url_for('static', filename='js/script.js')}}"></script>
+    <script src="{{ url_for('static', filename='bootstrap-5.3.2/dist/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>

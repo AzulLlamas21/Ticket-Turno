@@ -84,3 +84,15 @@ class Usuarios:
             usuario = cursor.fetchone()
         conexion.conn.close()
         return usuario[0]
+
+    @staticmethod
+    def verificar_credenciales(usu, con):
+        conexion = Database.Database()
+        usuario_encontrado = None
+        with conexion.cursor as cursor:
+            sql = "SELECT * FROM usuarios WHERE usuario = %s AND contrasena = %s"
+            vals = (usu, con)
+            cursor.execute(sql, vals)
+            usuario_encontrado = cursor.fetchone()
+        conexion.conn.close()
+        return usuario_encontrado

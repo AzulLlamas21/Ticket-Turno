@@ -21,7 +21,7 @@ body{
 
 .head{
     padding: 10px 10px;
-    margin: 5px 10px;
+    margin: 10px;
     
     justify-content: center;
     align-items: center;
@@ -49,15 +49,8 @@ h1{
     padding-right: 2%;
 }
 
-.row2{
-    padding: auto;
-    padding-top: 20px;
-    display: flex;
-    justify-content: center;
-}
-
 .row3{
-    padding: 10px;
+    padding: auto;
     padding-top: 20px;
 
     height: auto;
@@ -92,7 +85,7 @@ input[type="text"], input[type="tel"], select{
     border-radius: 6px;
     cursor:text;
     font-size: 16px;
-    width: 50%;
+    width: 100%;
 }
 
 select{
@@ -101,69 +94,65 @@ select{
 
 .cont{
     display: flex;
+    margin: 2%;
+    margin-bottom: 0;
+    padding-bottom: 0;
 }
 
-.cont input[type="text"], input[type="tel"]{
-    margin: auto;
+
+.btn_turno{
+    background: #4f1157;
+    color: #fff;
+    padding: 15px 10px;
+    font-size: 18px;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 90%;
+}
+
+button {
+    background: #4f1157;
+    color: #fff;
+    padding: 10px;
+    font-size: 18px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 5px;
+    margin-bottom: 5px;
     width: 100%;
 }
 
-input[type="submit"], #btn{
-    background-color: darkgrey;
+button:hover{
+    background: #733386;
+    color: black;
     font-weight: bold;
-    font-size: 25px;
-    width: auto;
-    min-width: 25%;
-    height: 10%;
-    padding: 10px 10px;
-    margin: 5px 10px;
-    border: none;
-    border-radius: 6px;
+    border: 1px solid #4f1157;
 }
 
-#btn{
-    font-size: 20px;
-    width: auto;
-    height: auto;
-    padding: 20px 10px;
-    margin: 5px 20px;
-}
-
-input[type="submit"]:hover, #btn{
-    background-color: rgb(105, 103, 103);
-    color:#fff;
-    cursor: pointer;
-}
-
-@media (max-width: 768px) {
-    .footer img{
-        width: 50%;
-        margin: 5px 10px;
+/* Responsive Styles */
+@media screen and (max-width: 768px) {
+    .container {
+        width: 95%;
+        padding: 10px;
+        margin: 20px auto;
+    }
+    .cont {
+        flex-direction: column;
+        margin: 5%;
     }
 
-    .cont{
-        display: block;
+    .row {
+        font-size: 16px;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    input[type="text"], input[type="tel"], select {
         width: 90%;
     }
 
-    input[type="text"], input[type="tel"]{
+    button {
         width: 100%;
-    }
-
-    select{
-        width: 90%;
-    }
-
-    .row3{
-        margin-left: 20%;
-    } 
-    .update-delete-buttons{
-        display: flex;
-        justify-content: center;
-    }
-
-    input[type="submit"]{
-        width: 85%;
+        padding: 12px;
     }
 }
-

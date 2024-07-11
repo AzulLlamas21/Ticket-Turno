@@ -19,14 +19,6 @@ body{
     padding: 10%;
 }
 
-.head{
-    padding: 10px 10px;
-    margin: 5px 10px;
-    
-    justify-content: center;
-    align-items: center;
-}
-
 h2, p{
     color: black;
     text-align: center;
@@ -34,10 +26,9 @@ h2, p{
     justify-content: center;
 }
 
-.head img{
-    margin-left: 10px;
-    max-width: 80px;
-    float: left;
+h2 {
+    font-size: 35px;
+    font-weight: bold;
 }
 
 .row{
@@ -61,25 +52,26 @@ input[type="text"], input[type="password"]{
     border-radius: 6px;
     cursor:text;
     font-size: 16px;
-    width: 50%;
+    width: 60%;
 }
 
-button[type="submit"]{
-    background-color: darkgrey;
-    font-weight: bold;
-    font-size: 25px;
-    width: 25%;
-    height: 10%;
-    padding: 10px 10px;
-    margin: 5px 10px;
-    border: none;
+button, input[type="submit"]{
+    background: #4f1157;
+    color: #fff;
+    padding: 10px;
+    font-size: 18px;
     border-radius: 6px;
+    cursor: pointer;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    width: 100%;
 }
 
-button[type="submit"]:hover{
-    background-color: rgb(105, 103, 103);
-    color:#fff;
-    cursor: pointer;
+button:hover, input[type="submit"]:hover{
+    background: #733386;
+    color: black;
+    font-weight: bold;
+    border: 1px solid #4f1157;
 }
 
 @media (max-width: 768px) {
@@ -92,7 +84,7 @@ button[type="submit"]:hover{
         width: 100%;
     }
 
-    button[type="submit"]{
+    button, input[type="submit"]{
         width: 85%;
     }
 }
