@@ -6,6 +6,7 @@
     <title>Iniciar Sesión</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/sweetalert2.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+    <script src="https://hcaptcha.com/1/api.js" async defer></script>
 </head>
 <body id="LoginForm">
     <div class="container" style="margin-top:70px;">
@@ -24,6 +25,7 @@
                         <label for="f_pass">Contraseña:</label>
                         <input type="password" class="form-control" id="f_pwd" name="f_pwd" placeholder="Contraseña">
                     </div>
+                    <div class="h-captcha" data-sitekey="f3d8cffe-eb54-48f6-a24a-7a7440bca0c0"></div>
                     <div class="row2">
                         <button id="btn" class="btn_login" type="submit">Iniciar Sesión</button>
                     </div>

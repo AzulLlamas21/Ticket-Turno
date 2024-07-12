@@ -1,0 +1,102 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    background-color: #dbdbdb;
+    color: white;
+    padding: 10px;
+}
+
+header h1 {
+
+    margin: 0;
+}
+
+header button {
+    background-color: #f44336;
+    border: none;
+    color: white;
+    padding: 15px;
+    width: auto;
+    cursor: pointer;
+    display: flex;
+    justify-content: right;
+}
+
+main {
+    margin-top: 20px;
+    width: 80%;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+button {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 15px;
+    cursor: pointer;
+    margin: 2% 5px;
+}
+
+button {
+    background-color: #4CAF50;
+}
+
+button:hover{
+    background: #206923;
+}
+
+header button:hover {
+    background-color: #6e2da3;
+    color: white;
+    padding: 10px;
+    cursor: pointer;
+}
+
+@media screen and (max-width: 768px) {
+    header {
+        padding: 5%;
+        padding-bottom: 0;
+    }
+    header button {
+        background-color: #9b4ef3;
+    }
+
+    button {
+        background-color: #37d4bf;
+    }
+    
+    button:hover{
+        background: #0f867c;
+    }
+
+    header button:hover {
+        background-color: #6e2da3;
+    }
+}
+
+

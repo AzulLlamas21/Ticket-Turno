@@ -4,8 +4,13 @@ De ahi en fuera no se ha insatalado nada más
 Se agrego una imagen de la BD, al igual que ticket_query
 (que crea la BD, las tablas e inserta algunos datos)
 
+La tabla formularios esta vacia, puede agregar nuevos 
+formularios desde test_Formularios.py, desde admin o navicat.
 
-
+Link del Github: https://github.com/AzulLlamas21/Ticket-Turno.git
+admin:
+   usuario: azul
+   contraseña: azul
 
 nota futura para mi:
 set PYTHONPATH=C:\VERANOS2024\flask\ticketTurno

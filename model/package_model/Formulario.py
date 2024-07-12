@@ -1,5 +1,4 @@
 import model.package_model.Database as Database
-import pymysql
 
 class Formulario:
     def __init__(self, no_turno=0, curp='', nombre='', paterno='', materno='', telefono='', celular='', correo='', id_nivel=0, id_mun=0, id_asunto=0, estado=''):

@@ -1,15 +1,67 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Admin</title>
-        <link rel="stylesheet" href="">
-    </head>
-    <body>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administración</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="{{ url_for('static', filename='img/logo_favicon.png') }}">
+        </div>
+        <h1>Administración de Formularios</h1>
+    </header>
+    <header>
+        <button onclick="window.location.href='/admin_logout'">Cerrar Sesión</button>
+        <button onclick="window.location.href='/dashboard'">Mostrar Dashboards</button>
+    </header>
 
+    <main>
+        <button onclick="window.location.href='/register'">Registrar Nuevo Formulario</button>
+        <input type="text" id="buscar" placeholder="Buscar por nombre completo o CURP">
+        <button onclick="searchForm()">Buscar</button>
+            
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>CURP</th>
+                    <th>Nombre</th>
+                    <th>Apellido Paterno</th>
+                    <th>Apellido Materno</th>
+                    <th>Teléfono</th>
+                    <th>Celular</th>
+                    <th>Correo</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for form in forms %}
+                    <tr>
+                        <td>{{ form[0] }}</td>
+                        <td>{{ form[1] }}</td>
+                        <td>{{ form[2] }}</td>
+                        <td>{{ form[3] }}</td>
+                        <td>{{ form[4] }}</td>
+                        <td>{{ form[5] }}</td>
+                        <td>{{ form[6] }}</td>
+                        <td>{{ form[7] }}</td>
+                        <td>{{ form[11] }}</td>
+                        <td>
+                            <button onclick="updateForm({{ form[0] }}, {{ form[9] }})">Actualizar</button>
+                            <button onclick="deleteForm({{ form[0] }}, {{ form[9] }})">Eliminar</button>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </main>
 
-        
-        <script src="" async defer></script>
-    </body>
+    <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+</body>
 </html>
