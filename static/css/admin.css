@@ -17,6 +17,12 @@ header {
     padding: 10px;
 }
 
+header img{
+    margin-left: 10px;
+    max-width: 80px;
+    float: left;
+}
+
 header h1 {
 
     margin: 0;

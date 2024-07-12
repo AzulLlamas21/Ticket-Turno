@@ -56,4 +56,38 @@ document.addEventListener("DOMContentLoaded", function() {
     `;
 
     resultDiv.innerHTML = data;
+    document.getElementById("btnGenerarPDF").addEventListener("click", function() {
+        fetch("/generar_pdf", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                nc: params.get("nc"),
+                curp: params.get("curp"),
+                nombre: params.get("nombre"),
+                paterno: params.get("paterno"),
+                materno: params.get("materno"),
+                telefono: params.get("telefono"),
+                celular: params.get("celular"),
+                correo: params.get("correo"),
+                nivel: nivelTexto,
+                municipio: munTexto,
+                asunto: asuntoTexto
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.open(data.pdf_url, '_blank');
+                mensaje('success', 'PDF Generado', 'Se ha generado el PDF correctamente.', '<a href="">Necesitas ayuda?</a>');
+            } else {
+                mensaje('error', 'Error', 'No se pudo generar el PDF.', '<a href="">Necesitas ayuda?</a>');
+            }
+        })
+        .catch(error => {
+            console.error('Error al generar el PDF:', error);
+            mensaje('error', 'Error', 'Ocurrió un error al generar el PDF.', '<a href="">Necesitas ayuda?</a>');
+        });
+    });
 });

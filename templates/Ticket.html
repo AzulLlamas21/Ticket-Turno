@@ -29,9 +29,10 @@
             </div>
     
             <div class="footer">
-                <img id="barras" src="{{ url_for('static', filename='img/barras.png') }}">
-                <img id="qr" src="{{ url_for('static', filename='img/qr.png') }}">
+                <a href="{{ url_for('index') }}" class="btn btn-secondary">Regresar</a>
+                <button id="btnGenerarPDF" class="btn btn-primary">Generar PDF</button>
             </div>
+            
         </div>
     
         <script src="{{ url_for('static', filename='js/result.js') }}"></script>    

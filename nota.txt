@@ -1,5 +1,4 @@
-Se utilizó pymysql
-De ahi en fuera no se ha insatalado nada más
+Se instaló pymysql, fpdf, qrcode
 
 Se agrego una imagen de la BD, al igual que ticket_query
 (que crea la BD, las tablas e inserta algunos datos)
