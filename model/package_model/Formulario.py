@@ -1,4 +1,5 @@
 import model.package_model.Database as Database
+import pymysql
 
 class Formulario:
     def __init__(self, no_turno=0, curp='', nombre='', paterno='', materno='', telefono='', celular='', correo='', id_nivel=0, id_mun=0, id_asunto=0, estado=''):
@@ -20,6 +21,15 @@ class Formulario:
         formularios = []
         with conexion.cursor as cursor:
             cursor.execute("SELECT * FROM formulario")
+            formularios = cursor.fetchall()
+        conexion.conn.close()
+        return formularios
+    
+    def obtener_formularios_por_municipio(self, id_mun):
+        conexion = Database.Database()
+        formularios = []
+        with conexion.cursor as cursor:
+            cursor.execute("SELECT * FROM formulario WHERE id_mun = %s", (id_mun,))
             formularios = cursor.fetchall()
         conexion.conn.close()
         return formularios

@@ -123,7 +123,6 @@
             <!-- Botones adicionales -->
             <div class="additional-buttons">
                 <button id="btn" class="btn_login" onclick="location.href='{{ url_for('login') }}'">Iniciar Sesión</button>
-                <button id="btn" class="btn_pdf" onclick="generarPDF()">Generar PDF</button>
                 <input type="text" id="buscar" placeholder="Buscar por nombre completo o CURP">
                 <button id="btn" class="btn_buscar" onclick="buscar()">Buscar</button>
             </div>
@@ -134,6 +133,7 @@
             <div id="update-delete-buttons" style="display: none;">
                 <button id="btn" class="btn_actualizar" onclick="actualizar()">Actualizar</button>
                 <button id="btn" class="btn_eliminar" onclick="eliminar()">Eliminar</button>
+                <button id="btn" class="btn_pdf" onclick="generarPDF()">Generar PDF</button>
             </div>
         </div>
 

@@ -1,10 +1,20 @@
-Se instaló pymysql, fpdf, qrcode
+Se instaló:
+   pymysql
+   fpdf
+   qrcode
+   matplotlib
+   pandas
 
 Se agrego una imagen de la BD, al igual que ticket_query
 (que crea la BD, las tablas e inserta algunos datos)
 
+Para generar PDF, llene los datos y dele click a Generar Turno
+lo enviara a una página y ahi podrá generar el pdf.
+
+Admin si se conecta a la BD.
 La tabla formularios esta vacia, puede agregar nuevos 
 formularios desde test_Formularios.py, desde admin o navicat.
+
 
 Link del Github: https://github.com/AzulLlamas21/Ticket-Turno.git
 admin:

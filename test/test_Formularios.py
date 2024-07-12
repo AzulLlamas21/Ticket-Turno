@@ -3,14 +3,23 @@ from model.package_model.Formulario import Formulario
 from datetime import datetime, date, time
 
 obj_formulario = Formulario()
-#lista_formularios = obj_formulario.obtener_formularios()
 
 #-------------------LISTA DE FORMULARIOS-------------------
+#lista_formularios = obj_formulario.obtener_formularios()
 #if lista_formularios is not None:
 #    for x in lista_formularios:
 #        print(x)
 #else:
 #    print("No se encontraron datos de formularios")
+
+#-------------------LISTA DE FORMULARIOS POR ID MUNICIPIO-------------------
+# lista_formularios = obj_formulario.obtener_formularios_por_municipio(1)
+# if lista_formularios is not None:
+#     for x in lista_formularios:
+#         print(x)
+# else:
+#     print("No se encontraron datos de formularios")
+
 
 #-------------------BUSQUEDA DE FORMULARIO POR ID-------------------
 #print("\n=====================================\n")
@@ -32,28 +41,28 @@ obj_formulario = Formulario()
 
 #-------------------AGREGAR-------------------
 #print("\n=================INSERTADO=================\n")
-#no_turno = 0
-#curp = 'AEAX010101MNEXXXR5'
-#nombre = 'Jose'
-#paterno = 'Pérez'
-#materno = 'García'
-#telefono = '5551234587'
-#celular = '5559876583'
-#correo = 'jose.perez@example.com'
-#id_nivel = 1
-#id_mun = 1
-#id_asunto = 1
-#estado = 'Pendiente'
+no_turno = 3
+curp = 'KXXX987654MNOPQRT0'
+nombre = 'Tinkiwinky'
+paterno = 'Lala'
+materno = 'Po'
+telefono = '2212243334'
+celular = '5566556667'
+correo = 'Tinky@example.com'
+id_nivel = 9
+id_mun = 2
+id_asunto = 3
+estado = 'Resuelto'
 
-#if len(curp) == 18:
-#    obj_formulario_new = Formulario(no_turno, curp, nombre, paterno, materno, telefono, celular, correo, id_nivel, id_mun, id_asunto, estado)
-#    result_ins = obj_formulario.agregar_formulario(obj_formulario_new)
-#    if result_ins == 1:
-#        print("Registro insertado correctamente")
-#    else:
-#        print("Error al insertar el registro")
-#else:
-#    print("Un dato es incorrecto, no se puede insertar")
+if len(curp) == 18:
+    obj_formulario_new = Formulario(no_turno, curp, nombre, paterno, materno, telefono, celular, correo, id_nivel, id_mun, id_asunto, estado)
+    result_ins = obj_formulario.agregar_formulario(obj_formulario_new)
+    if result_ins == 1:
+        print("Registro insertado correctamente")
+    else:
+        print("Error al insertar el registro")
+else:
+    print("Un dato es incorrecto, no se puede insertar")
 
 #-------------------ELIMINAR-------------------
 #print("\n=================BORRADO=================\n")
@@ -66,31 +75,32 @@ obj_formulario = Formulario()
 #    print("Error al eliminar el registro")
 
 #------------------ACTUALIZAR-------------------
-#print("\n=================UPDATE=================\n")
-#no_turno = 1
-#curp = 'KXXX987654MNOPQRT0'
-#nombre = 'Ximena'
-#paterno = 'Kim'
-#materno = 'X'
-#telefono = '1112243334'
-#celular = '4466556667'
-#correo = 'kxx@example.com'
-#id_nivel = 9
-#id_mun = 1
-#id_asunto = 3
-#estado = 'Activo'
+# print("\n=================UPDATE=================\n")
+# no_turno = 3
+# curp = 'KXXX987654MNOPQRT0'
+# nombre = 'Tinkiwinky'
+# paterno = 'Lala'
+# materno = 'Po'
+# telefono = '2212243334'
+# celular = '5566556667'
+# correo = 'Tinky@example.com'
+# id_nivel = 9
+# id_mun = 1
+# id_asunto = 3
+# estado = 'Activo'
 
-#if len(curp) == 18:
-#    obj_formulario_new = Formulario(no_turno, curp, nombre, paterno, materno, telefono, celular, correo, id_nivel, id_mun, id_asunto, estado)
-#    result_upd = obj_formulario.modificar_formulario(obj_formulario_new)
-#    if result_upd == 1:
-#        print("Registro actualizado correctamente")
-#    else:
-#        print("Error al actualizar el registro")
-#else:
-#    print("Un dato es incorrecto, no se puede actualizar")
+# if len(curp) == 18:
+#     #Para poder actualizar debe escribir el no_turno y el municipio del registro, de lo contrario no se podrá actualizar(Si quiere editar el municipio elimine el formulario y cree otro)
+#     obj_formulario_new = Formulario(no_turno, curp, nombre, paterno, materno, telefono, celular, correo, id_nivel, id_mun, id_asunto, estado)
+#     result_upd = obj_formulario.modificar_formulario(obj_formulario_new)
+#     if result_upd == 1:
+#         print("Registro actualizado correctamente")
+#     else:
+#         print("Error al actualizar el registro")
+# else:
+#     print("Un dato es incorrecto, no se puede actualizar")
 
 #-------------------EXISTE-------------------
-curp = 'ZYXW987654MNOPQRT0'
-cuantos = Formulario.existe_formulario(curp)
-print(cuantos)
+#curp = 'ZYXW987654MNOPQRT0'
+#cuantos = Formulario.existe_formulario(curp)
+#print(cuantos)

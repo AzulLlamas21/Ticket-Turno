@@ -1,9 +1,13 @@
 from flask import Flask, render_template, url_for, request, redirect, jsonify, send_file
 from model.package_model.Usuario import Usuarios
 from model.package_model.Formulario import Formulario
+from fpdf import FPDF
 import os
 import qrcode
-from fpdf import FPDF
+import matplotlib.pyplot as plt
+import io
+import base64
+import pandas as pd
 
 
 app = Flask(__name__)
@@ -37,7 +41,6 @@ def login():
 
     return render_template('login.html')
 
-
 @app.route('/logout')
 def logout():
     return redirect(url_for('index'))
@@ -48,10 +51,39 @@ def admin_logout():
 
 @app.route('/admin')
 def admin():
-
     formulario_model = Formulario()
     forms = formulario_model.obtener_formularios()
     return render_template('admin.html', forms=forms)
+
+@app.route('/dashboard')
+def dashboard():
+    return render_template('dashboard.html')
+
+@app.route('/dashboard/data')
+def dashboard_data():
+    municipio = request.args.get('municipio')
+    formulario_model = Formulario()
+    if municipio:
+        forms = formulario_model.obtener_formularios_por_municipio(municipio)
+    else:
+        forms = formulario_model.obtener_formularios()
+    
+    df = pd.DataFrame(forms, columns=['no_turno', 'curp', 'nombre', 'paterno', 'materno', 'telefono', 'celular', 'correo', 'id_nivel', 'id_mun', 'id_asunto', 'estado'])
+    estado_counts = df['estado'].value_counts()
+    
+    plt.figure(figsize=(10, 6))
+    estado_counts.plot(kind='bar', color=['green', 'blue', 'red'])
+    plt.title('Estado de Solicitudes')
+    plt.xlabel('Estado')
+    plt.ylabel('Cantidad')
+
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png')
+    buf.seek(0)
+    image_base64 = base64.b64encode(buf.getvalue()).decode('utf-8')
+    buf.close()
+
+    return jsonify({'image': 'data:image/png;base64,{}'.format(image_base64)})
 
 @app.route('/generar_ticket', methods=['POST'])
 def generar_ticket():

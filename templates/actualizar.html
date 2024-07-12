@@ -19,49 +19,63 @@
                 <h1>Ticket de Turno</h1>
             </div>
 
+            <div class="row3">
+                <!-- Botones adicionales -->
+                <div class="additional-buttons">
+                    <button id="btn" class="btn_pdf" onclick="generarPDF()">Generar PDF</button>
+                    <input type="text" id="buscar" placeholder="Buscar por nombre completo o CURP">
+                    <button id="btn" class="btn_buscar" onclick="buscar()">Buscar</button>
+                </div>
+            </div>
+
             <div class="cont">
                 <div class="row">
+                    <label for="f_no_turno">Número de Turno:</label>
+                    <input type="text" name="f_no_turno" id="f_no_turno" placeholder="Número de Turno">
+                </div>
+
+                <div class="row">
                     <label for="f_nc">Nombre completo de quien realizará el trámite:</label>
-                    <input type="text" name="f_nc" id="f_nc" placeholder="Ingrese nombre completo">
+                    <input type="text" name="f_nc" id="f_nc" placeholder="nombre completo">
                 </div>
 
                 <div class="row">
                     <label for="f_curp">CURP:</label>
-                    <input class="mayusculas" type="text" name="f_curp" id="f_curp" placeholder="Ingrese CURP">
+                    <input class="mayusculas" type="text" name="f_curp" id="f_curp" placeholder="CURP">
                 </div>
             </div>
 
             <div class="cont">
                 <div class="row">
                     <label for="f_nombre">Nombre:</label>
-                    <input type="text" name="f_nombre" id="f_nombre" placeholder="Ingrese nombre">
+                    <input type="text" name="f_nombre" id="f_nombre" placeholder="nombre">
                 </div>
 
                 <div class="row">
                     <label for="f_paterno">Paterno:</label>
-                    <input type="text" name="f_paterno" id="f_paterno" placeholder="Ingrese apellido paterno">
+                    <input type="text" name="f_paterno" id="f_paterno" placeholder="apellido paterno">
                 </div>
 
                 <div class="row">
                     <label for="f_materno">Materno:</label>
-                    <input type="text" name="f_materno" id="f_materno" placeholder="Ingrese apellido materno">
+                    <input type="text" name="f_materno" id="f_materno" placeholder="apellido materno">
                 </div>
             </div>
 
             <div class="cont">
                 <div class="row">
                     <label for="f_telefono">Teléfono:</label>
-                    <input type="tel" name="f_telefono" id="f_telefono" placeholder="Ingrese teléfono">
+                    <input type="tel" name="f_telefono" id="f_telefono" placeholder="teléfono">
                 </div>
 
                 <div class="row">
                     <label for="f_celular">Celular:</label>
-                    <input type="tel" name="f_celular" id="f_celular" placeholder="Ingrese celular">
+                    <input type="tel" name="f_celular" id="f_celular" placeholder="celular">
                 </div>
 
                 <div class="row">
                     <label for="f_correo">Correo:</label>
-                    <input type="text" name="f_correo" id="f_correo" placeholder="Ingrese correo">
+                    <input type="text" name="f_correo" id="f_correo" placeholder="correo">
                 </div>
             </div>
 
@@ -84,6 +98,7 @@
             </div>
 
             <div class="cont">
+                <p>Para poder actualizar debe escribir el no_turno y el municipio del registro, de lo contrario no se podrá actualizar(Si quiere editar el municipio elimine el formulario y cree otro)</p>
                 <div class="row">
                     <label for="f_mun">Municipio donde desea estudie el alumno:</label>
                     <select name="f_mun" id="f_mun">
@@ -114,19 +129,11 @@
                 </div>
             </div>
 
-            <div class="row3">
-                <button id="btn" class="btn_turno" type="submit">Generar Turno</button>
+            <div class="row">
+                <label for="f_estado">Estado:</label>
+                <input type="text" name="f_estado" id="f_estado" placeholder="nombre completo">
             </div>
         </form>
-
-        <div class="row3">
-            <!-- Botones adicionales -->
-            <div class="additional-buttons">
-                <button id="btn" class="btn_pdf" onclick="generarPDF()">Generar PDF</button>
-                <input type="text" id="buscar" placeholder="Buscar por nombre completo o CURP">
-                <button id="btn" class="btn_buscar" onclick="buscar()">Buscar</button>
-            </div>
-        </div>
 
         <div class="row3">
             <!-- Botones de actualizar y eliminar ocultos -->

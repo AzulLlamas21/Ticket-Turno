@@ -38,6 +38,12 @@ header button {
     display: flex;
     justify-content: right;
 }
+header button:hover {
+    background-color: #941007;
+    border: 1px solid #6b201b;
+    color: black;
+    font-weight: bold;
+}
 
 main {
     margin-top: 20px;

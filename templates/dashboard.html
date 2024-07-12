@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <header>
+        <h1>Dashboard de Solicitudes</h1>
+    </header>
+    <header>
+        <button onclick="window.location.href='/admin_logout'">Cerrar Sesión</button>
+        <button onclick="window.location.href='/admin'">Administrar Formularios</button>
+    </header>
+
+    <main>
+        <label for="municipio">Filtrar por Municipio:</label>
+        <input type="text" id="municipio" placeholder="Ingrese el municipio">
+        <button onclick="loadDashboard()">Filtrar</button>
+        
+        <div id="chart-container">
+            <img id="chart" src="" alt="Gráfico de Estado de Solicitudes">
+        </div>
+    </main>
+
+    <script>
+        function loadDashboard() {
+            const municipio = document.getElementById('municipio').value;
+            fetch(`/dashboard/data?municipio=${municipio}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('chart').src = data.image;
+                });
+        }
+
+        window.onload = loadDashboard;
+    </script>
+</body>
+</html>
