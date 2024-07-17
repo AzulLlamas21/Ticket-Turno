@@ -1,65 +1,74 @@
-from model.db import db
+from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy.orm import relationship
+from model.db import Base, get_bd
 
-class Usuarios(db.Model):
-    no_usuario = db.Column(db.Integer, primary_key=True)
-    usuario = db.Column(db.String(255), nullable=False)
-    contrasena = db.Column(db.String(255), nullable=False)
+class Usuario(Base):
+    __tablename__ = 'usuarios'
+    no_usuario = Column(Integer, primary_key=True, autoincrement=True)
+    usuario = Column(String(30), nullable=False)
+    contrasena = Column(String(20), nullable=False)
 
     @staticmethod
     def obtener_usuarios():
-        return Usuarios.query.all()
+        bd = next(get_bd())
+        return bd.query(Usuario).all()
 
     @staticmethod
     def obtener_usuario_por_no_usuario(no_usuario):
-        return Usuarios.query.filter_by(no_usuario=no_usuario).first()
+        bd = next(get_bd())
+        return bd.query(Usuario).filter_by(no_usuario=no_usuario).first()
 
     @staticmethod
     def agregar_usuario(obj_usu):
         try:
-            nuevo_usuario = Usuarios(usuario=obj_usu.__usuario, contrasena=obj_usu.__contrasena)
-            db.session.add(nuevo_usuario)
-            db.session.commit()
+            bd = next(get_bd())
+            nuevo_usuario = Usuario(usuario=obj_usu.usuario, contrasena=obj_usu.contrasena)
+            bd.add(nuevo_usuario)
+            bd.commit()
             return 1  # Éxito
         except Exception as e:
             print(f"Error al agregar usuario: {e}")
-            db.session.rollback()
+            bd.rollback()
             return 0  # Error
 
     @staticmethod
     def eliminar_usuario(no_usuario):
         try:
-            usuario = Usuarios.query.get(no_usuario)
+            bd = next(get_bd())
+            usuario = bd.query(Usuario).get(no_usuario)
             if usuario:
-                db.session.delete(usuario)
-                db.session.commit()
+                bd.delete(usuario)
+                bd.commit()
                 return 1  # Éxito
             else:
                 return 0  # No encontrado
         except Exception as e:
             print(f"Error al eliminar usuario: {e}")
-            db.session.rollback()
+            bd.rollback()
             return 0  # Error
 
     @staticmethod
     def modificar_usuario(obj_usu):
         try:
-            usuario = Usuarios.query.get(obj_usu.__no_usuario)
+            bd = next(get_bd())
+            usuario = bd.query(Usuario).get(obj_usu.no_usuario)
             if usuario:
-                usuario.usuario = obj_usu.__usuario
-                usuario.contrasena = obj_usu.__contrasena
-                db.session.commit()
+                usuario.usuario = obj_usu.usuario
+                usuario.contrasena = obj_usu.contrasena
+                bd.commit()
                 return 1  # Éxito
             else:
                 return 0  # No encontrado
         except Exception as e:
             print(f"Error al modificar usuario: {e}")
-            db.session.rollback()
+            bd.rollback()
             return 0  # Error
 
     @staticmethod
     def existe_usuario(usu):
         try:
-            count = Usuarios.query.filter_by(usuario=usu).count()
+            bd = next(get_bd())
+            count = bd.query(Usuario).filter_by(usuario=usu).count()
             return count
         except Exception as e:
             print(f"Error al verificar existencia de usuario: {e}")
@@ -68,7 +77,8 @@ class Usuarios(db.Model):
     @staticmethod
     def verificar_credenciales(usu, con):
         try:
-            usuario_encontrado = Usuarios.query.filter_by(usuario=usu, contrasena=con).first()
+            bd = next(get_bd())
+            usuario_encontrado = bd.query(Usuario).filter_by(usuario=usu, contrasena=con).first()
             return usuario_encontrado
         except Exception as e:
             print(f"Error al verificar credenciales: {e}")

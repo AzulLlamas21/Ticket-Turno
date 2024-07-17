@@ -1,63 +1,72 @@
-from model.db import db
+from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy.orm import relationship
+from model.db import Base, get_bd
 
-class Nivel(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    nivel = db.Column(db.String(255), nullable=False)
+class Nivel(Base):
+    __tablename__ = 'nivel'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    nivel = Column(String(2), nullable=False)
 
     @staticmethod
     def obtener_niveles():
-        return Nivel.query.all()
+        bd = next(get_bd())
+        return bd.query(Nivel).all()
 
     @staticmethod
     def obtener_nivel_por_id(id):
-        return Nivel.query.filter_by(id=id).first()
+        bd = next(get_bd())
+        return bd.query(Nivel).filter_by(id=id).first()
 
     @staticmethod
     def agregar_nivel(obj_nv):
         try:
-            nuevo_nivel = Nivel(nivel=obj_nv.__nombre_nivel)
-            db.session.add(nuevo_nivel)
-            db.session.commit()
+            bd = next(get_bd())
+            nuevo_nivel = Nivel(nivel=obj_nv.nivel)
+            bd.add(nuevo_nivel)
+            bd.commit()
             return 1  # Éxito
         except Exception as e:
             print(f"Error al agregar nivel: {e}")
-            db.session.rollback()
+            bd.rollback()
             return 0  # Error
 
     @staticmethod
     def eliminar_nivel(id):
         try:
-            nivel = Nivel.query.get(id)
+            bd = next(get_bd())
+            nivel = bd.query(Nivel).get(id)
             if nivel:
-                db.session.delete(nivel)
-                db.session.commit()
+                bd.delete(nivel)
+                bd.commit()
                 return 1  # Éxito
             else:
                 return 0  # No encontrado
         except Exception as e:
             print(f"Error al eliminar nivel: {e}")
-            db.session.rollback()
+            bd.rollback()
             return 0  # Error
 
     @staticmethod
     def modificar_nivel(obj_nv):
         try:
-            nivel = Nivel.query.get(obj_nv.__id_nivel)
+            bd = next(get_bd())
+            nivel = bd.query(Nivel).get(obj_nv.id)
             if nivel:
-                nivel.nivel = obj_nv.__nombre_nivel
-                db.session.commit()
+                nivel.nivel = obj_nv.nivel
+                bd.commit()
                 return 1  # Éxito
             else:
                 return 0  # No encontrado
         except Exception as e:
             print(f"Error al modificar nivel: {e}")
-            db.session.rollback()
+            bd.rollback()
             return 0  # Error
 
     @staticmethod
     def existe_nivel(nv):
         try:
-            count = Nivel.query.filter_by(nivel=nv).count()
+            bd = next(get_bd())
+            count = bd.query(Nivel).filter_by(nivel=nv).count()
             return count
         except Exception as e:
             print(f"Error al verificar existencia de nivel: {e}")

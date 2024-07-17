@@ -1,63 +1,72 @@
-from model.db import db
+from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy.orm import relationship
+from model.db import Base, get_bd
 
-class Municipio(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    municipio = db.Column(db.String(255), nullable=False)
+class Municipio(Base):
+    __tablename__ = 'municipio'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    municipio = Column(String(30), nullable=False)
 
     @staticmethod
     def obtener_municipios():
-        return Municipio.query.all()
+        bd = next(get_bd())
+        return bd.query(Municipio).all()
 
     @staticmethod
     def obtener_municipio_por_id(id):
-        return Municipio.query.filter_by(id=id).first()
+        bd = next(get_bd())
+        return bd.query(Municipio).filter_by(id=id).first()
 
     @staticmethod
     def agregar_municipio(obj_mun):
         try:
-            nuevo_municipio = Municipio(municipio=obj_mun.__nombre_municipio)
-            db.session.add(nuevo_municipio)
-            db.session.commit()
+            bd = next(get_bd())
+            nuevo_municipio = Municipio(municipio=obj_mun.municipio)
+            bd.add(nuevo_municipio)
+            bd.commit()
             return 1  # Éxito
         except Exception as e:
             print(f"Error al agregar municipio: {e}")
-            db.session.rollback()
+            bd.rollback()
             return 0  # Error
 
     @staticmethod
     def eliminar_municipio(id):
         try:
-            municipio = Municipio.query.get(id)
+            bd = next(get_bd())
+            municipio = bd.query(Municipio).get(id)
             if municipio:
-                db.session.delete(municipio)
-                db.session.commit()
+                bd.delete(municipio)
+                bd.commit()
                 return 1  # Éxito
             else:
                 return 0  # No encontrado
         except Exception as e:
             print(f"Error al eliminar municipio: {e}")
-            db.session.rollback()
+            bd.rollback()
             return 0  # Error
 
     @staticmethod
     def modificar_municipio(obj_mun):
         try:
-            municipio = Municipio.query.get(obj_mun.__id_municipio)
+            bd = next(get_bd())
+            municipio = bd.query(Municipio).get(obj_mun.id)
             if municipio:
-                municipio.municipio = obj_mun.__nombre_municipio
-                db.session.commit()
+                municipio.municipio = obj_mun.municipio
+                bd.commit()
                 return 1  # Éxito
             else:
                 return 0  # No encontrado
         except Exception as e:
             print(f"Error al modificar municipio: {e}")
-            db.session.rollback()
+            bd.rollback()
             return 0  # Error
 
     @staticmethod
     def existe_municipio(mun):
         try:
-            count = Municipio.query.filter_by(municipio=mun).count()
+            bd = next(get_bd())
+            count = bd.query(Municipio).filter_by(municipio=mun).count()
             return count
         except Exception as e:
             print(f"Error al verificar existencia de municipio: {e}")

@@ -1,63 +1,70 @@
-from model.db import db
+from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy.orm import relationship
+from model.db import Base, get_bd
 
-class Asunto(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    asunto = db.Column(db.String(50), nullable=False)
+class Asunto(Base):
+    __tablename__ = 'asunto'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    asunto = Column(String(50), nullable=False)
 
     @staticmethod
     def obtener_asuntos():
-        return Asunto.query.all()
+        bd = next(get_bd())
+        return bd.query(Asunto).all()
 
     @staticmethod
     def obtener_asunto_por_id(id):
-        return Asunto.query.filter_by(id=id).first()
+        bd = next(get_bd())
+        return bd.query(Asunto).filter(Asunto.id == id).first()
 
     @staticmethod
     def agregar_asunto(obj_asto):
         try:
-            nuevo_asunto = Asunto(asunto=obj_asto.__nombre_asunto)
-            db.session.add(nuevo_asunto)
-            db.session.commit()
+            bd = next(get_bd())
+            último_id = bd.query(Asunto).order_by(Asunto.id.desc()).first().id
+            obj_asto.id = (último_id+1)
+            bd.add(obj_asto)
+            bd.commit()
             return 1  # Éxito
         except Exception as e:
             print(f"Error al agregar asunto: {e}")
-            db.session.rollback()
             return 0  # Error
 
     @staticmethod
     def eliminar_asunto(id):
         try:
-            asunto = Asunto.query.get(id)
+            bd = next(get_bd())
+            asunto = bd.query(Asunto).filter(Asunto.id == id).first()
             if asunto:
-                db.session.delete(asunto)
-                db.session.commit()
+                bd.delete(asunto)
+                bd.commit()
                 return 1  # Éxito
             else:
                 return 0  # No encontrado
         except Exception as e:
             print(f"Error al eliminar asunto: {e}")
-            db.session.rollback()
             return 0  # Error
 
     @staticmethod
     def modificar_asunto(obj_asto):
         try:
-            asunto = Asunto.query.get(obj_asto.__id_asunto)
+            bd = next(get_bd())
+            asunto = bd.query(Asunto).filter(Asunto.id == obj_asto.id).first()
             if asunto:
-                asunto.asunto = obj_asto.__nombre_asunto
-                db.session.commit()
+                asunto.asunto = obj_asto.asunto
+                bd.commit()
                 return 1  # Éxito
             else:
                 return 0  # No encontrado
         except Exception as e:
             print(f"Error al modificar asunto: {e}")
-            db.session.rollback()
             return 0  # Error
 
     @staticmethod
     def existe_asunto(asto):
         try:
-            count = Asunto.query.filter_by(asunto=asto).count()
+            bd = next(get_bd())
+            count = bd.query(Asunto).filter(Asunto.asunto==asto).count()
             return count
         except Exception as e:
             print(f"Error al verificar existencia de asunto: {e}")

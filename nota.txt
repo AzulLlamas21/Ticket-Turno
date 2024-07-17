@@ -5,6 +5,7 @@ Se instaló:
    matplotlib
    pandas
    sqlalchemy
+   mysql-connector-python
 
 
 Se agrego una imagen de la BD, al igual que ticket_query
@@ -26,3 +27,21 @@ admin:
 nota futura para mi:
 set PYTHONPATH=C:\VERANOS2024\flask\ticketTurno
 python test\test_Usuarios.py
+
+
+
+Paso por paso. 
+1. Abrir terminal en Command Prompt. 
+2. Crear un entorno virtual(use v.bat).
+3. Instalar los pquetes anteriores:
+      pymysql
+      fpdf
+      qrcode
+      matplotlib
+      pandas
+      sqlalchemy
+      mysql-connector-python
+4. De ser necesario (si aparece el error que no se encuentra la carpeta model), escriba en la terminal lo siguiente:
+   set PYTHONPATH=C:\Dirección_de_proyecto
+5. Ejecutar r.bat
+

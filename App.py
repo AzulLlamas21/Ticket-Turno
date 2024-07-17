@@ -1,10 +1,10 @@
-from flask import Flask, render_template, url_for, request, redirect, jsonify, send_file
-from model.db import db
-from model.package_model.Usuario import Usuarios
-from model.package_model.Formulario import Formulario
-from model.package_model.Nivel import Nivel
-from  model.package_model.Municipio import Municipio
-from model.package_model.Asunto import Asunto
+from flask import Flask, render_template, url_for, request, redirect, jsonify, send_file, session
+#from model.db import db
+# from model.package_model.Usuario import Usuarios
+# from model.package_model.Formulario import Formulario
+# from model.package_model.Nivel import Nivel
+# from  model.package_model.Municipio import Municipio
+# from model.package_model.Asunto import Asunto
 import os
 import qrcode
 import matplotlib.pyplot as plt
@@ -12,7 +12,7 @@ import io
 import base64
 import pandas as pd
 from fpdf import FPDF
-from flask_sqlalchemy import SQLAlchemy
+#from sqlalchemy import SQLAlchemy
 
 
 app = Flask(__name__)
@@ -23,13 +23,13 @@ HCAPTCHA_SECRET = 'ES_ef2fbcaf50b4434f9d9b9d05d4cd6ae3'
 #INDEX
 @app.route('/')
 def index():
-    obj_nv = Nivel.Nivel()
-    obj_mun = Municipio.Municipio()
-    obj_asu = Asunto.Asunto()
-    lista_niveles = obj_nv.obtener_niveles()
-    lista_municipios = obj_mun.obtener_municipios()
-    lista_asuntos = obj_asu.obtener_asuntos()
-    return render_template('Index.html', lista_niveles=lista_niveles, lista_municipios=lista_municipios, lista_asuntos=lista_asuntos)
+    # obj_nv = Nivel.Nivel()
+    # obj_mun = Municipio.Municipio()
+    # obj_asu = Asunto.Asunto()
+    # lista_niveles = obj_nv.obtener_niveles()
+    # lista_municipios = obj_mun.obtener_municipios()
+    # lista_asuntos = obj_asu.obtener_asuntos()
+    return render_template('Index.html')#, lista_niveles=lista_niveles, lista_municipios=lista_municipios, lista_asuntos=lista_asuntos)
 
 #LOGIN
 @app.route('/login', methods=['GET', 'POST'])
@@ -67,9 +67,9 @@ def admin_logout():
 #ADMINISTRADOR(OBTENER LISTA DE FORMULARIO)
 @app.route('/admin')
 def admin():
-    formulario_model = Formulario()
-    forms = formulario_model.obtener_formularios()
-    return render_template('admin.html', forms=forms)
+    # formulario_model = Formulario()
+    # forms = formulario_model.obtener_formularios()
+    return render_template('admin.html')#, forms=forms)
 
 #IR A DASHBOARD
 @app.route('/dashboard')
@@ -112,37 +112,37 @@ def buscar_formulario():
         return jsonify(success=True, formulario=formulario.to_dict())
     return jsonify(success=False)
 
-@app.route('/agregar_formulario', methods=['POST'])
-def agregar_formulario():
-    data = request.get_json()
-    # Agrega el formulario a la base de datos
-    nuevo_formulario = Formulario(**data)
-    db.session.add(nuevo_formulario)
-    db.session.commit()
-    return jsonify(success=True)
+# @app.route('/agregar_formulario', methods=['POST'])
+# def agregar_formulario():
+#     data = request.get_json()
+#     # Agrega el formulario a la base de datos
+#     nuevo_formulario = Formulario(**data)
+#     db.session.add(nuevo_formulario)
+#     db.session.commit()
+#     return jsonify(success=True)
 
-@app.route('/actualizar_formulario', methods=['PUT'])
-def actualizar_formulario():
-    data = request.get_json()
-    # Actualiza el formulario en la base de datos
-    formulario = Formulario.query.filter_by(curp=data['curp']).first()
-    if formulario:
-        for key, value in data.items():
-            setattr(formulario, key, value)
-        db.session.commit()
-        return jsonify(success=True)
-    return jsonify(success=False)
+# @app.route('/actualizar_formulario', methods=['PUT'])
+# def actualizar_formulario():
+#     data = request.get_json()
+#     # Actualiza el formulario en la base de datos
+#     formulario = Formulario.query.filter_by(curp=data['curp']).first()
+#     if formulario:
+#         for key, value in data.items():
+#             setattr(formulario, key, value)
+#         db.session.commit()
+#         return jsonify(success=True)
+#     return jsonify(success=False)
 
-@app.route('/eliminar_formulario', methods=['DELETE'])
-def eliminar_formulario():
-    curp = request.args.get('curp')
-    # Elimina el formulario de la base de datos
-    formulario = Formulario.query.filter_by(curp=curp).first()
-    if formulario:
-        db.session.delete(formulario)
-        db.session.commit()
-        return jsonify(success=True)
-    return jsonify(success=False)
+# @app.route('/eliminar_formulario', methods=['DELETE'])
+# def eliminar_formulario():
+#     curp = request.args.get('curp')
+#     # Elimina el formulario de la base de datos
+#     formulario = Formulario.query.filter_by(curp=curp).first()
+#     if formulario:
+#         db.session.delete(formulario)
+#         db.session.commit()
+#         return jsonify(success=True)
+#     return jsonify(success=False)
 
 
 #GENERAR TICKET
@@ -169,8 +169,8 @@ def generar_ticket():
             id_nivel=f_nivel, id_mun=f_mun, id_asunto=f_asunto, estado='pendiente'
         )
         # Agregar a la sesión y confirmar
-        db.session.add(nuevo_formulario)
-        db.session.commit()
+        # db.session.add(nuevo_formulario)
+        # db.session.commit()
         
         # Datos a pasar a la plantilla
         datos = {

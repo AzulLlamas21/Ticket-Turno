@@ -13,13 +13,29 @@
 </head>
 <body id="Formulario">
     <div class="container">
-        <form action="/generar_ticket" method="post" onsubmit="return valida_forma();">
+        <form action="{{ url_for('generar_ticket') }}" method="post" onsubmit="return valida_forma();">
             <div class="head">
                 <img src="{{ url_for('static', filename='img/logo_favicon.png') }}">
                 <h1>Ticket de Turno</h1>
             </div>
-            
-            <!-- Los campos del formulario -->
+
+            <div class="action-buttons">
+                <div class="left">
+                    <button type="button" id="btn_login" class="btn_login" onclick="location.href='{{ url_for('login') }}'" style="width: auto;">Iniciar Sesión</button>
+                </div>
+                <div class="right">
+                    <input type="text" id="buscar" placeholder="Buscar por nombre completo o CURP">
+                    <button id="buscarBtn" type="button">Buscar</button>
+                </div>
+                <div class="bottom-right">
+                    <div id="update-delete-buttons" style="display: none;">
+                        <button type="button" id="btn_actualizar" class="btn_actualizar" onclick="actualizar()">Actualizar</button>
+                        <button type="button" id="btn_eliminar" class="btn_eliminar" onclick="eliminar()">Eliminar</button>
+                        <button type="button" id="btn_pdf" class="btn_pdf" onclick="generarPDF()">Generar PDF</button>
+                    </div>
+                </div>
+            </div>
+
             <div class="cont">
                 <div class="row">
                     <label for="f_nc">Nombre completo de quien realizará el trámite:</label>
@@ -30,7 +46,9 @@
                     <label for="f_curp">CURP:</label>
                     <input class="mayusculas" type="text" name="f_curp" id="f_curp" placeholder="Ingrese CURP">
                 </div>
-                
+            </div>
+
+            <div class="cont">
                 <div class="row">
                     <label for="f_nombre">Nombre:</label>
                     <input type="text" name="f_nombre" id="f_nombre" placeholder="Ingrese nombre">
@@ -45,7 +63,9 @@
                     <label for="f_materno">Materno:</label>
                     <input type="text" name="f_materno" id="f_materno" placeholder="Ingrese apellido materno">
                 </div>
-                
+            </div>
+
+            <div class="cont">
                 <div class="row">
                     <label for="f_telefono">Teléfono:</label>
                     <input type="tel" name="f_telefono" id="f_telefono" placeholder="Ingrese teléfono">
@@ -60,7 +80,9 @@
                     <label for="f_correo">Correo:</label>
                     <input type="text" name="f_correo" id="f_correo" placeholder="Ingrese correo">
                 </div>
-                
+            </div>
+
+            <div class="cont">
                 <div class="row">
                     <label for="f_nivel">¿Nivel al que desea ingresar o que ya cursa el alumno?</label>
                     <select name="f_nivel" id="f_nivel">
@@ -74,7 +96,9 @@
                         {% endif %}
                     </select>
                 </div>
-                
+            </div>
+            
+            <div class="cont">
                 <div class="row">
                     <label for="f_mun">Municipio donde desea estudie el alumno:</label>
                     <select name="f_mun" id="f_mun">
@@ -88,7 +112,9 @@
                         {% endif %}
                     </select>
                 </div>
-                
+            </div>
+            
+            <div class="cont">
                 <div class="row">
                     <label for="f_asunto">Seleccione el asunto que va a tratar:</label>
                     <select name="f_asunto" id="f_asunto">
@@ -105,7 +131,7 @@
             </div>
 
             <div class="row3">
-                <button id="btn_turno" class="btn_turno" type="submit">Generar Turno</button>
+                <button id="btn_turno" class="btn_turno" type="submit" >Generar Turno</button>
             </div>
         </form>
     </div>
