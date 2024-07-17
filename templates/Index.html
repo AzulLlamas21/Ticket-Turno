@@ -24,13 +24,14 @@
                     <button type="button" id="btn_login" class="btn_login" onclick="location.href='{{ url_for('login') }}'" style="width: auto;">Iniciar Sesión</button>
                 </div>
                 <div class="right">
-                    <input type="text" id="buscar" placeholder="Buscar por nombre completo o CURP">
+                    <input type="text" id="buscarNoTurno" placeholder="Buscar por no_turno">
+                    <input type="text" id="buscarCurp" placeholder="Buscar por CURP">
                     <button id="buscarBtn" type="button">Buscar</button>
                 </div>
                 <div class="bottom-right">
                     <div id="update-delete-buttons" style="display: none;">
-                        <button type="button" id="btn_actualizar" class="btn_actualizar" onclick="actualizar()">Actualizar</button>
-                        <button type="button" id="btn_eliminar" class="btn_eliminar" onclick="eliminar()">Eliminar</button>
+                        <button type="button" id="btn_actualizar" class="btn_actualizar" onclick="actualizarFormulario()">Actualizar</button>
+                        <button type="button" id="btn_eliminar" class="btn_eliminar" onclick="eliminarFormulario()">Eliminar</button>
                         <button type="button" id="btn_pdf" class="btn_pdf" onclick="generarPDF()">Generar PDF</button>
                     </div>
                 </div>
@@ -131,13 +132,13 @@
             </div>
 
             <div class="row3">
-                <button id="btn_turno" class="btn_turno" type="submit" >Generar Turno</button>
+                <button id="btn_turno" class="btn_turno" type="submit">Generar Turno</button>
             </div>
         </form>
     </div>
 
     <script src="{{ url_for('static', filename='bootstrap-5.3.2/dist/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/admin.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/actualizar_cliente.js') }}" defer></script>
     <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
 </body>
 </html>

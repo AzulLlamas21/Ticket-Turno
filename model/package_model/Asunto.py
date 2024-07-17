@@ -10,12 +10,22 @@ class Asunto(Base):
     @staticmethod
     def obtener_asuntos():
         bd = next(get_bd())
-        return bd.query(Asunto).all()
+        return [(asunto.id, asunto.asunto) for asunto in bd.query(Asunto).all()]
 
     @staticmethod
     def obtener_asunto_por_id(id):
         bd = next(get_bd())
         return bd.query(Asunto).filter(Asunto.id == id).first()
+    
+    @staticmethod
+    def obtener_nombre_por_id(id):
+        try:
+            bd = next(get_bd())
+            asunto = bd.query(Asunto).filter(Asunto.id == id).first()
+            return asunto.asunto if asunto else None
+        except Exception as e:
+            print(f"Error al obtener nombre de asunto por ID: {e}")
+            return None
 
     @staticmethod
     def agregar_asunto(obj_asto):

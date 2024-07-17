@@ -1,10 +1,10 @@
 from flask import Flask, render_template, url_for, request, redirect, jsonify, send_file, session
-#from model.db import db
-# from model.package_model.Usuario import Usuarios
-# from model.package_model.Formulario import Formulario
-# from model.package_model.Nivel import Nivel
-# from  model.package_model.Municipio import Municipio
-# from model.package_model.Asunto import Asunto
+from model.db import init_db
+#from model.package_model.Usuario import Usuarios
+from model.package_model.Formulario import Formulario
+from model.package_model.Nivel import Nivel
+from  model.package_model.Municipio import Municipio
+from model.package_model.Asunto import Asunto
 import os
 import qrcode
 import matplotlib.pyplot as plt
@@ -16,20 +16,26 @@ from fpdf import FPDF
 
 
 app = Flask(__name__)
+init_db
 
 HCAPTCHA_SECRET = 'ES_ef2fbcaf50b4434f9d9b9d05d4cd6ae3'
 
 
+# Función para verificar y obtener el nombre del archivo existente
+def obtener_archivo_existente(dir_path, filename_pattern):
+    files = os.listdir(dir_path)
+    for file in files:
+        if file.startswith(filename_pattern):
+            return file
+    return None
+
 #INDEX
 @app.route('/')
 def index():
-    # obj_nv = Nivel.Nivel()
-    # obj_mun = Municipio.Municipio()
-    # obj_asu = Asunto.Asunto()
-    # lista_niveles = obj_nv.obtener_niveles()
-    # lista_municipios = obj_mun.obtener_municipios()
-    # lista_asuntos = obj_asu.obtener_asuntos()
-    return render_template('Index.html')#, lista_niveles=lista_niveles, lista_municipios=lista_municipios, lista_asuntos=lista_asuntos)
+    lista_niveles = Nivel.obtener_niveles()
+    lista_municipios = Municipio.obtener_municipios()
+    lista_asuntos = Asunto.obtener_asuntos()
+    return render_template('Index.html', lista_niveles=lista_niveles, lista_municipios=lista_municipios, lista_asuntos=lista_asuntos)
 
 #LOGIN
 @app.route('/login', methods=['GET', 'POST'])
@@ -103,11 +109,15 @@ def dashboard_data():
 
     return jsonify({'image': 'data:image/png;base64,{}'.format(image_base64)})
 
-@app.route('/buscar_formulario')
+#BUSCAR FORMULARIO
+@app.route('/buscar_formulario', methods=['GET'])
 def buscar_formulario():
-    query = request.args.get('query')
+    no_turno = request.args.get('no_turno')
+    curp = request.args.get('curp')
+
     # Realiza la búsqueda en la base de datos y devuelve el formulario correspondiente
-    formulario = Formulario.query.filter((Formulario.curp == query) | (Formulario.nombre_completo == query)).first()
+    formulario = Formulario.obtener_formulario_por_curp(no_turno, curp)
+
     if formulario:
         return jsonify(success=True, formulario=formulario.to_dict())
     return jsonify(success=False)
@@ -150,7 +160,11 @@ def buscar_formulario():
 def generar_ticket():
     try:
         # Recoger los datos del formulario
-        f_nc = request.form['f_nc']
+        f_nc = Formulario.generar_nombre_completo(
+            request.form['f_nombre'],
+            request.form['f_paterno'],
+            request.form['f_materno']
+        )
         f_curp = request.form['f_curp']
         f_nombre = request.form['f_nombre']
         f_paterno = request.form['f_paterno']
@@ -166,28 +180,31 @@ def generar_ticket():
         nuevo_formulario = Formulario(
             curp=f_curp, nombre=f_nombre, paterno=f_paterno, materno=f_materno, 
             telefono=f_telefono, celular=f_celular, correo=f_correo, 
-            id_nivel=f_nivel, id_mun=f_mun, id_asunto=f_asunto, estado='pendiente'
+            id_nivel=f_nivel, id_mun=f_mun, id_asunto=f_asunto, estado='Pendiente'
         )
-        # Agregar a la sesión y confirmar
-        # db.session.add(nuevo_formulario)
-        # db.session.commit()
         
-        # Datos a pasar a la plantilla
-        datos = {
-            'nombre_completo': f_nc,
-            'curp': f_curp,
-            'nombre': f_nombre,
-            'paterno': f_paterno,
-            'materno': f_materno,
-            'telefono': f_telefono,
-            'celular': f_celular,
-            'correo': f_correo,
-            'nivel': f_nivel,
-            'municipio': f_mun,
-            'asunto': f_asunto
-        }
-        
-        return render_template('Ticket.html', datos=datos)
+        # Guardar el formulario en la base de datos
+        resultado = Formulario.agregar_formulario(nuevo_formulario)
+        if resultado == 1:
+            # Éxito al guardar en la base de datos
+            datos = {
+                'nombre_completo': f_nc,
+                'curp': f_curp,
+                'nombre': f_nombre,
+                'paterno': f_paterno,
+                'materno': f_materno,
+                'telefono': f_telefono,
+                'celular': f_celular,
+                'correo': f_correo,
+                'nivel': Nivel.obtener_nombre_por_id(f_nivel),
+                'municipio': Municipio.obtener_nombre_por_id(f_mun),
+                'asunto': Asunto.obtener_nombre_por_id(f_asunto)
+            }
+            return render_template('Ticket.html', datos=datos)
+        else:
+            # Error al guardar en la base de datos
+            return redirect(url_for('index'))
+
     except Exception as e:
         print(f"Error al generar el ticket: {e}")
         return redirect(url_for('index'))
@@ -201,61 +218,70 @@ def ticket():
 #GENERAR PDF
 @app.route('/generar_pdf', methods=['POST'])
 def generar_pdf():
-    data = request.json
-    pdf_dir = os.path.join(app.root_path, 'static', 'pdf')
-    qr_dir = os.path.join(app.root_path, 'static', 'qr')
-    if not os.path.exists(pdf_dir):
-        os.makedirs(pdf_dir)
-    if not os.path.exists(qr_dir):
-        os.makedirs(qr_dir)
-    
-    existing_files = os.listdir(pdf_dir)
-    for file in existing_files:
-        if data['curp'] in file and data['asunto'] in file:
-            pdf_filename = file
-            pdf_url = url_for('static', filename=f'pdf/{pdf_filename}', _external=True)
-            return jsonify({'success': True, 'pdf_url': pdf_url})
-    
-    no_turno = 1
-    if existing_files:
-        existing_numbers = [int(f.split('-')[0]) for f in existing_files if '-' in f]
-        if existing_numbers:
-            no_turno = max(existing_numbers) + 1
+    try:
+        # Obtener datos del formulario
+        data = request.json
+        
+        # Directorios para guardar PDFs y QRs
+        pdf_dir = os.path.join(app.root_path, 'static', 'pdf')
+        qr_dir = os.path.join(app.root_path, 'static', 'qr')
 
-    pdf_filename = f"{no_turno}-{data['curp']}-{data['asunto']}.pdf"
-    pdf_output = os.path.join(pdf_dir, pdf_filename)
+        # Crear directorios si no existen
+        if not os.path.exists(pdf_dir):
+            os.makedirs(pdf_dir)
+        if not os.path.exists(qr_dir):
+            os.makedirs(qr_dir)
+
+        # Generar nombre del archivo PDF y QR
+        pdf_filename = f"{data['curp']}_{data['no_turno']}_ticket.pdf"
+        pdf_output = os.path.join(pdf_dir, pdf_filename)
+
+        # Verificar si ya existe un PDF con el mismo nombre
+        existing_pdf = obtener_archivo_existente(pdf_dir, f"{data['curp']}_{data['no_turno']}_ticket")
+        if existing_pdf:
+            pdf_output = os.path.join(pdf_dir, existing_pdf)
+
+        # Contenido del QR
+        qr_content = f"CURP: {data['curp']}, No Turno: {data['no_turno']}"
+        qr_filename = f"{data['curp']}_{data['no_turno']}_qr.png"
+        qr_output = os.path.join(qr_dir, qr_filename)
+
+        # Verificar si ya existe un QR con el mismo nombre
+        existing_qr = obtener_archivo_existente(qr_dir, f"{data['curp']}_{data['no_turno']}_qr")
+        if not existing_qr:
+            qr = qrcode.make(qr_content)
+            qr.save(qr_output)
+
+        # Crear PDF
+        pdf = FPDF()
+        pdf.add_page()
+        pdf.set_font("Arial", size=12)
+
+        pdf.cell(200, 10, txt="Ticket de Turno", ln=True, align='C')
+        pdf.cell(200, 10, txt=f"Nombre Completo: {data['nombre_completo']}", ln=True, align='L')
+        pdf.cell(200, 10, txt=f"CURP: {data['curp']}", ln=True, align='L')
+        pdf.cell(200, 10, txt=f"No Turno: {data['no_turno']}", ln=True, align='L')
+        pdf.cell(200, 10, txt=f"Teléfono: {data['telefono']}", ln=True, align='L')
+        pdf.cell(200, 10, txt=f"Celular: {data['celular']}", ln=True, align='L')
+        pdf.cell(200, 10, txt=f"Correo: {data['correo']}", ln=True, align='L')
+        pdf.cell(200, 10, txt=f"Nivel: {data['nivel']}", ln=True, align='L')
+        pdf.cell(200, 10, txt=f"Municipio: {data['municipio']}", ln=True, align='L')
+        pdf.cell(200, 10, txt=f"Asunto: {data['asunto']}", ln=True, align='L')
+
+        if not existing_pdf:
+            pdf.image(qr_output, x=10, y=150, w=50)
+
+        pdf.output(pdf_output)
+
+        # URL del PDF
+        pdf_url = url_for('static', filename=f'pdf/{os.path.basename(pdf_output)}', _external=True)
+
+        return jsonify({'success': True, 'pdf_url': pdf_url})
+
+    except Exception as e:
+        print(f"Error al generar el PDF: {e}")
+        return jsonify({'success': False, 'message': str(e)})
     
-    qr_content = f"CURP: {data['curp']}, No Turno: {no_turno}"
-    qr_image = qrcode.make(qr_content)
-    qr_filename = f"{no_turno}-{data['curp']}-{data['asunto']}.png"
-    qr_output = os.path.join(qr_dir, qr_filename)
-    qr_image.save(qr_output)
-    pdf = FPDF()
-    pdf.set_auto_page_break(auto=True, margin=15)
-    pdf.add_page()
-    pdf.set_font("Arial", size=12)
-
-    pdf.cell(200, 10, txt="Ticket de Turno", ln=True, align='C')
-    pdf.ln(10)
-    pdf.cell(200, 10, txt=f"Nombre Completo: {data['nc']}", ln=True)
-    pdf.cell(200, 10, txt=f"CURP: {data['curp']}", ln=True)
-    pdf.cell(200, 10, txt=f"Nombre: {data['nombre']}", ln=True)
-    pdf.cell(200, 10, txt=f"Apellido Paterno: {data['paterno']}", ln=True)
-    pdf.cell(200, 10, txt=f"Apellido Materno: {data['materno']}", ln=True)
-    pdf.cell(200, 10, txt=f"Teléfono: {data['telefono']}", ln=True)
-    pdf.cell(200, 10, txt=f"Celular: {data['celular']}", ln=True)
-    pdf.cell(200, 10, txt=f"Correo: {data['correo']}", ln=True)
-    pdf.cell(200, 10, txt=f"Nivel: {data['nivel']}", ln=True)
-    pdf.cell(200, 10, txt=f"Municipio: {data['municipio']}", ln=True)
-    pdf.cell(200, 10, txt=f"Asunto: {data['asunto']}", ln=True)
-    
-    pdf.ln(10)
-    pdf.image(qr_output, x = None, y = None, w = 50, h = 50)
-    pdf.output(pdf_output)
-    pdf_url = url_for('static', filename=f'pdf/{pdf_filename}', _external=True)
-
-    return jsonify({'success': True, 'pdf_url': pdf_url})
-
 if __name__ == '__main__':
     app.run(debug=True)
     

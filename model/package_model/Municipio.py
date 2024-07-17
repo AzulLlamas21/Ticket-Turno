@@ -10,13 +10,23 @@ class Municipio(Base):
     @staticmethod
     def obtener_municipios():
         bd = next(get_bd())
-        return bd.query(Municipio).all()
+        return [(municipio.id, municipio.municipio) for municipio in bd.query(Municipio).all()]
 
     @staticmethod
     def obtener_municipio_por_id(id):
         bd = next(get_bd())
         return bd.query(Municipio).filter_by(id=id).first()
 
+    @staticmethod
+    def obtener_nombre_por_id(id):
+        try:
+            bd = next(get_bd())
+            municipio = bd.query(Municipio).filter(Municipio.id == id).first()
+            return municipio.municipio if municipio else None
+        except Exception as e:
+            print(f"Error al obtener nombre de asunto por ID: {e}")
+            return None
+    
     @staticmethod
     def agregar_municipio(obj_mun):
         try:

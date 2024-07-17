@@ -60,6 +60,18 @@ class Formulario(Base):
     def agregar_formulario(obj_form):
         try:
             bd = next(get_bd())
+            
+            # Verificar si existen formularios para el mismo municipio
+            existentes = bd.query(Formulario).filter_by(id_mun=obj_form.id_mun).all()
+            
+            if existentes:
+                # Obtener el máximo no_turno y sumar 1
+                max_no_turno = max([f.no_turno for f in existentes])
+                obj_form.no_turno = max_no_turno + 1
+            else:
+                # Si no hay formularios para este municipio, asignar no_turno = 1
+                obj_form.no_turno = 1
+            
             bd.add(obj_form)
             bd.commit()
             return 1  # Éxito
@@ -127,3 +139,22 @@ class Formulario(Base):
         if materno_completo in ['x', 'none', '']:
             return f"{nombre} {paterno}"
         return f"{nombre} {paterno} {materno}"
+    
+    @staticmethod
+    def obtener_numeros_de_turno_existentes(id_mun):
+        try:
+            bd = next(get_bd())
+            numeros_de_turno = bd.query(Formulario.no_turno).filter_by(id_mun=id_mun).all()
+            numeros_de_turno = [num[0] for num in numeros_de_turno]  # Convertir resultados en una lista de números de turno
+            return numeros_de_turno
+        except Exception as e:
+            print(f"Error al obtener números de turno: {e}")
+            return []
+
+    @staticmethod
+    def encontrar_proximo_numero_de_turno_disponible(id_mun):
+        numeros_existentes = Formulario.obtener_numeros_de_turno_existentes(id_mun)
+        if numeros_existentes:
+            return max(numeros_existentes) + 1
+        else:
+            return 1

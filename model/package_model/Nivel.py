@@ -10,13 +10,23 @@ class Nivel(Base):
     @staticmethod
     def obtener_niveles():
         bd = next(get_bd())
-        return bd.query(Nivel).all()
+        return [(nivel.id, nivel.nivel) for nivel in bd.query(Nivel).all()]
 
     @staticmethod
     def obtener_nivel_por_id(id):
         bd = next(get_bd())
         return bd.query(Nivel).filter_by(id=id).first()
 
+    @staticmethod
+    def obtener_nombre_por_id(id):
+        try:
+            bd = next(get_bd())
+            nivel = bd.query(Nivel).filter(Nivel.id == id).first()
+            return nivel.nivel if nivel else None
+        except Exception as e:
+            print(f"Error al obtener nombre de asunto por ID: {e}")
+            return None
+    
     @staticmethod
     def agregar_nivel(obj_nv):
         try:

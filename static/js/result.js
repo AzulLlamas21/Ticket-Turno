@@ -1,94 +1,74 @@
 document.addEventListener("DOMContentLoaded", function() {
-    let params = new URLSearchParams(window.location.search);
-    let resultDiv = document.getElementById("result");
-
-    const nivelTextos = {
-        "1": "Nivel 1",
-        "2": "Nivel 2",
-        "3": "Nivel 3",
-        "4": "Nivel 4",
-        "5": "Nivel 5",
-        "6": "Nivel 6",
-        "7": "Nivel 7",
-        "8": "Nivel 8",
-        "9": "Nivel 9"
-    };
-
-    const munTextos = {
-        "1": "Saltillo",
-        "2": "Arteaga",
-        "3": "Ramos Arizpe",
-        "4": "Monclova",
-        "5": "Torreón",
-        "6": "Acuña",
-        "7": "Ocampo",
-        "8": "Piedras Negras"
-    };
-
-    const asuntoTextos = {
-        "1": "Ingreso",
-        "2": "Egreso",
-        "3": "Pago de Inscripción",
-        "4": "Selección de Horario",
-        "5": "Recoger papelería"
-    };
-
-    let nivel = params.get("nivel");
-    let mun = params.get("mun");
-    let asunto = params.get("asunto");
-
-    let nivelTexto = nivelTextos[nivel] || "No seleccionado";
-    let munTexto = munTextos[mun] || "No seleccionado";
-    let asuntoTexto = asuntoTextos[asunto] || "No seleccionado";
-
-    let data = `
-        <p><strong>Nombre Completo:</strong> ${params.get("nc")}</p>
-        <p><strong>CURP:</strong> ${params.get("curp")}</p>
-        <p><strong>Nombre:</strong> ${params.get("nombre")}</p>
-        <p><strong>Apellido Paterno:</strong> ${params.get("paterno")}</p>
-        <p><strong>Apellido Materno:</strong> ${params.get("materno")}</p>
-        <p><strong>Teléfono:</strong> ${params.get("telefono")}</p>
-        <p><strong>Celular:</strong> ${params.get("celular")}</p>
-        <p><strong>Correo:</strong> ${params.get("correo")}</p>
-        <p><strong>Nivel:</strong> ${nivelTexto}</p>
-        <p><strong>Municipio:</strong> ${munTexto}</p>
-        <p><strong>Asunto:</strong> ${asuntoTexto}</p>
-    `;
-
-    resultDiv.innerHTML = data;
-
     document.getElementById("btnGenerarPDF").addEventListener("click", function() {
+        // Obtener los datos del DOM
+        let nombreCompleto = document.getElementById("nombre_completo").innerText;
+        let curp = document.getElementById("curp").innerText;
+        let nombre = document.getElementById("nombre").innerText;
+        let paterno = document.getElementById("paterno").innerText;
+        let materno = document.getElementById("materno").innerText;
+        let telefono = document.getElementById("telefono").innerText;
+        let celular = document.getElementById("celular").innerText;
+        let correo = document.getElementById("correo").innerText;
+        let nivel = document.getElementById("nivel").innerText;
+        let municipio = document.getElementById("municipio").innerText;
+        let asunto = document.getElementById("asunto").innerText;
+        let noTurno = document.getElementById("no_turno").innerText;
+
+        // Crear objeto con los datos
+        let datos = {
+            nombre_completo: nombreCompleto,
+            curp: curp,
+            nombre: nombre,
+            paterno: paterno,
+            materno: materno,
+            telefono: telefono,
+            celular: celular,
+            correo: correo,
+            nivel: nivel,
+            municipio: municipio,
+            asunto: asunto,
+            no_turno: noTurno
+        };
+
+        // Realizar la solicitud POST al servidor Flask
         fetch("/generar_pdf", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({
-                nc: params.get("nc"),
-                curp: params.get("curp"),
-                nombre: params.get("nombre"),
-                paterno: params.get("paterno"),
-                materno: params.get("materno"),
-                telefono: params.get("telefono"),
-                celular: params.get("celular"),
-                correo: params.get("correo"),
-                nivel: nivelTexto,
-                municipio: munTexto,
-                asunto: asuntoTexto
-            })
+            body: JSON.stringify(datos)
         })
         .then(response => response.json())
         .then(data => {
             if (data.success) {
+                // Abrir el PDF en una nueva pestaña
                 window.open(data.pdf_url, '_blank');
-                mensaje('success', 'PDF Generado', 'Se ha generado el PDF correctamente.', '<a href="">Necesitas ayuda?</a>');
+                // Mostrar mensaje de éxito
+                Swal.fire({
+                    icon: 'success',
+                    title: 'PDF Generado',
+                    text: 'Se ha generado el PDF correctamente.',
+                    footer: '<a href="">Necesitas ayuda?</a>'
+                });
             } else {
-                mensaje('error', 'Error', 'No se pudo generar el PDF.', '<a href="">Necesitas ayuda?</a>');
+                // Mostrar mensaje de error si no se puede generar el PDF
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'No se pudo generar el PDF.',
+                    footer: '<a href="">Necesitas ayuda?</a>'
+                });
             }
         })
         .catch(error => {
+            // Mostrar mensaje de error en caso de fallo en la solicitud
             console.error('Error al generar el PDF:', error);
-            mensaje('error', 'Error', 'Ocurrió un error al generar el PDF.', '<a href="">Necesitas ayuda?</a>');
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Ocurrió un error al generar el PDF.',
+                footer: '<a href="">Necesitas ayuda?</a>'
+            });
         });
     });
 });
