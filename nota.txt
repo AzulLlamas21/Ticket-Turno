@@ -4,6 +4,8 @@ Se instaló:
    qrcode
    matplotlib
    pandas
+   sqlalchemy
+
 
 Se agrego una imagen de la BD, al igual que ticket_query
 (que crea la BD, las tablas e inserta algunos datos)

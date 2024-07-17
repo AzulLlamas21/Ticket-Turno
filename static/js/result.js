@@ -56,6 +56,7 @@ document.addEventListener("DOMContentLoaded", function() {
     `;
 
     resultDiv.innerHTML = data;
+
     document.getElementById("btnGenerarPDF").addEventListener("click", function() {
         fetch("/generar_pdf", {
             method: "POST",

@@ -1,85 +1,64 @@
-import model.package_model.Database as Database
+from model.db import db
 
-class Nivel:
-    def __init__(self, id_nivel=0, nombre_nivel=''):
-        self.__id_nivel = id_nivel
-        self.__nombre_nivel = nombre_nivel
-    
-    def obtener_niveles(self):
-        conexion = Database.Database()
-        niveles = []
-        with conexion.cursor as cursor:
-            cursor.execute("SELECT id, nivel FROM nivel")
-            niveles = cursor.fetchall()
-        conexion.conn.close()
-        return niveles
-    
-    def obtener_nivel_por_id(self, id):
-        conexion = Database.Database()
-        nivel = None
-        with conexion.cursor as cursor:
-            cursor.execute("SELECT id, nivel FROM nivel WHERE id = %s", (id))
-            nivel = cursor.fetchone()
-        conexion.conn.close()
-        return nivel
-    
-    def agregar_nivel(self, obj_nv):
-        conexion = Database.Database()
-        with conexion.cursor as cursor:
-            try:
-                sql = "INSERT INTO nivel(nivel) VALUES(%s)"
-                vals = (obj_nv.__nombre_nivel)
-                affected = cursor.execute(sql, vals)
-                conexion.conn.commit()
-                return affected
-            except Exception as e:
-                return e
-            except pymysql.err.ProgrammingError as except_detail:
-                return print("pymysql.err.ProgrammingError: {0}".format(except_detail))
-            finally:
-                conexion.conn.close()
-    
-    def eliminar_nivel(self, id):
-        conexion = Database.Database()
-        affected = 0
-        with conexion.cursor as cursor:
-            try:
-                sql = "DELETE FROM nivel WHERE id = %s"
-                vals = (id)
-                affected = cursor.execute(sql, vals)
-                conexion.conn.commit()
-                return affected
-            except Exception as e:
-                return e
-            except pymysql.err.ProgrammingError as except_detail:
-                return print("pymysql.err.ProgrammingError: {0}".format(except_detail))
-            finally:
-                conexion.conn.close()
-    
-    def modificar_nivel(self, obj_nv):
-        conexion = Database.Database()
-        with conexion.cursor as cursor:
-            try:
-                sql = "UPDATE nivel SET nivel = %s WHERE id = %s"
-                vals = (obj_nv.__nombre_nivel, obj_nv.__id_nivel)
-                affected = cursor.execute(sql, vals)
-                conexion.conn.commit()
-                return affected
-            except Exception as e:
-                return e
-            except pymysql.err.ProgrammingError as except_detail:
-                return print("pymysql.err.ProgrammingError: {0}".format(except_detail))
-            finally:
-                conexion.conn.close()
-    
+class Nivel(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    nivel = db.Column(db.String(255), nullable=False)
+
+    @staticmethod
+    def obtener_niveles():
+        return Nivel.query.all()
+
+    @staticmethod
+    def obtener_nivel_por_id(id):
+        return Nivel.query.filter_by(id=id).first()
+
+    @staticmethod
+    def agregar_nivel(obj_nv):
+        try:
+            nuevo_nivel = Nivel(nivel=obj_nv.__nombre_nivel)
+            db.session.add(nuevo_nivel)
+            db.session.commit()
+            return 1  # Éxito
+        except Exception as e:
+            print(f"Error al agregar nivel: {e}")
+            db.session.rollback()
+            return 0  # Error
+
+    @staticmethod
+    def eliminar_nivel(id):
+        try:
+            nivel = Nivel.query.get(id)
+            if nivel:
+                db.session.delete(nivel)
+                db.session.commit()
+                return 1  # Éxito
+            else:
+                return 0  # No encontrado
+        except Exception as e:
+            print(f"Error al eliminar nivel: {e}")
+            db.session.rollback()
+            return 0  # Error
+
+    @staticmethod
+    def modificar_nivel(obj_nv):
+        try:
+            nivel = Nivel.query.get(obj_nv.__id_nivel)
+            if nivel:
+                nivel.nivel = obj_nv.__nombre_nivel
+                db.session.commit()
+                return 1  # Éxito
+            else:
+                return 0  # No encontrado
+        except Exception as e:
+            print(f"Error al modificar nivel: {e}")
+            db.session.rollback()
+            return 0  # Error
+
     @staticmethod
     def existe_nivel(nv):
-        conexion = Database.Database()
-        nivel = None
-        with conexion.cursor as cursor:
-            sql = "SELECT count(*) as ex FROM nivel WHERE nivel = %s"
-            vals = (nv)
-            cursor.execute(sql, vals)
-            nivel = cursor.fetchone()
-        conexion.conn.close()
-        return nivel[0]
+        try:
+            count = Nivel.query.filter_by(nivel=nv).count()
+            return count
+        except Exception as e:
+            print(f"Error al verificar existencia de nivel: {e}")
+            return 0

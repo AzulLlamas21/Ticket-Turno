@@ -1,40 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Ticket Turno</title>
-        <!-- Tus enlaces a CSS y otros recursos -->
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap-5.3.2/dist/css/bootstrap.css') }}">
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/estilo.css') }}">
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/ticket.css') }}">
-        <!-- SweetAlert2 -->
-        <script src="{{ url_for('static', filename='js/sweetalert2.all.min.js') }}"></script>
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/sweetalert2.min.css') }}">
-    </head>
-    <body>
-        <div class="container">
-            <div class="head">
-                <div class="logo">
-                    <img src="{{ url_for('static', filename='img/logo_favicon.png') }}">
-                </div>
-                <div class="title">
-                    <h1>Turno</h1>
-                    <h2>Datos Ingresados</h2>
-                </div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticket Turno</title>
+    <!-- Tus enlaces a CSS y otros recursos -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap-5.3.2/dist/css/bootstrap.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/estilo.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/ticket.css') }}">
+    <!-- SweetAlert2 -->
+    <script src="{{ url_for('static', filename='js/sweetalert2.all.min.js') }}"></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/sweetalert2.min.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="head">
+            <div class="logo">
+                <img src="{{ url_for('static', filename='img/logo_favicon.png') }}">
             </div>
-    
-            <div class="row">
-                <div id="result"></div>
+            <div class="title">
+                <h1>Turno</h1>
+                <h2>Datos Ingresados</h2>
             </div>
-    
-            <div class="footer">
-                <a href="{{ url_for('index') }}" class="btn btn-secondary">Regresar</a>
-                <button id="btnGenerarPDF" class="btn btn-primary">Generar PDF</button>
-            </div>
-            
         </div>
-    
-        <script src="{{ url_for('static', filename='js/result.js') }}"></script>    
-    </body>
+
+        <div class="row">
+            <div id="result">
+                <p>Nombre completo: {{ datos['nombre_completo'] }}</p>
+                <p>CURP: {{ datos['curp'] }}</p>
+                <p>Nombre: {{ datos['nombre'] }}</p>
+                <p>Paterno: {{ datos['paterno'] }}</p>
+                <p>Materno: {{ datos['materno'] }}</p>
+                <p>Teléfono: {{ datos['telefono'] }}</p>
+                <p>Celular: {{ datos['celular'] }}</p>
+                <p>Correo: {{ datos['correo'] }}</p>
+                <p>Nivel: {{ datos['nivel'] }}</p>
+                <p>Municipio: {{ datos['municipio'] }}</p>
+                <p>Asunto: {{ datos['asunto'] }}</p>
+            </div>
+        </div>
+
+        <div class="footer">
+            <a href="{{ url_for('index') }}" class="btn btn-secondary">Regresar</a>
+            <button id="btnGenerarPDF" class="btn btn-primary">Generar PDF</button>
+        </div>
+        
+    </div>
+
+    <script src="{{ url_for('static', filename='js/result.js') }}"></script>    
+</body>
 </html>

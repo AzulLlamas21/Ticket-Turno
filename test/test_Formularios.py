@@ -20,6 +20,22 @@ obj_formulario = Formulario()
 # else:
 #     print("No se encontraron datos de formularios")
 
+#-------------------LISTA DE FORMULARIOS POR NOMBRE MUNICIPIO-------------------
+# lista_formularios = obj_formulario.obtener_formularios_nombre_municipio(Saltillo)
+# if lista_formularios is not None:
+#     for x in lista_formularios:
+#         print(x)
+# else:
+#     print("No se encontraron datos de formularios")
+
+#-------------------LISTA DE FORMULARIOS POR ESTADO-------------------
+# lista_formularios = obj_formulario.obtener_formularios_estado(Pendiente)
+# if lista_formularios is not None:
+#     for x in lista_formularios:
+#         print(x)
+# else:
+#     print("No se encontraron datos de formularios")
+
 
 #-------------------BUSQUEDA DE FORMULARIO POR ID-------------------
 #print("\n=====================================\n")

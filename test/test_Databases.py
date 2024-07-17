@@ -1,3 +1,3 @@
-import model.package_model.Database as Database
+import ticketTurno.model.db as db
 
-db = Database.Database()
+db = db.Database()

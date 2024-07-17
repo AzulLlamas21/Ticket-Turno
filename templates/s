@@ -2,27 +2,14 @@ const pattern_curp = /^[A-Z]{4}[0-9]{6}[A-Z]{6}[A-Z0-9]{2}?$/;
 const pattern_tel = /^[0-9]{10}?$/;
 const pattern_correo = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}?$/;
 
-function getTextInputById(id) {
-    return document.getElementById(id).value.trim();
-}
-
-function mensaje(tipo, titulo, texto, footer) {
-    Swal.fire({
-        icon: tipo,
-        title: titulo,
-        text: texto,
-        footer: footer
-    });
-}
-
 function valida_forma() {
     let js_nc = getTextInputById("f_nc");
     let js_curp = getTextInputById("f_curp");
     let js_nombre = getTextInputById("f_nombre");
     let js_paterno = getTextInputById("f_paterno");
     let js_materno = getTextInputById("f_materno");
-    let js_tel = getTextInputById("f_telefono");
-    let js_cel = getTextInputById("f_celular");
+    let js_telefono = getTextInputById("f_telefono");
+    let js_celular = getTextInputById("f_celular");
     let js_correo = getTextInputById("f_correo");
     let js_nivel = document.getElementById("f_nivel").value;
     let js_mun = document.getElementById("f_mun").value;
@@ -105,43 +92,118 @@ function valida_forma() {
     if (js_asunto == "0") {
         mensaje('warning', 'ASUNTO', 'Olvido seleccionar el Asunto!', '<a href="">Necesitas ayuda?</a>');
         return false;
-    } else {
-        
-        return true;
     }
+
+    let data = {
+        nc: js_nc,
+        curp: js_curp,
+        nombre: js_nombre,
+        paterno: js_paterno,
+        materno: js_materno,
+        telefono: js_telefono,
+        celular: js_celular,
+        correo: js_correo,
+        nivel: js_nivel,
+        mun: js_mun,
+        asunto: js_asunto
+    };
+
+    fetch('/generar_ticket', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Error en la solicitud');
+        }
+        return response.text(); // Cambia a text() porque estamos redirigiendo
+    })
+    .then(result => {
+        console.log(result);
+        // Redirecciona directamente a la página de ticket
+        let url = new URL('/ticket', window.location.origin);
+        Object.keys(data).forEach(key => url.searchParams.append(key, data[key]));
+        window.location.href = url;
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+    
+    return false; 
 }
 
-document.getElementById("buscarBtn").addEventListener("click", function() {
-    let searchInput = document.getElementById("buscar").value.trim();
-    if (searchInput === "") {
-        mensaje('error', 'Campo de Búsqueda Vacío', 'Ingrese un nombre completo o CURP para buscar.', '');
-    } else {
-        buscarFormulario(searchInput);
+let getTextInputById = (id) => {
+    return document.getElementById(id).value.trim();
+}
+
+let mensaje = (tipo, titulo, texto, liga) => {
+    Swal.fire({
+        icon: tipo,
+        title: titulo,
+        text: texto,
+        footer: liga
+    });
+}
+
+function generarPDF() {
+    // Lógica para generar PDF
+    console.log("Generando PDF...");
+}
+
+function buscar() {
+    let searchQuery = document.getElementById('buscar').value.trim();
+    if (searchQuery.length === 0) {
+        mensaje('warning', 'BUSCAR', 'Debe ingresar un nombre completo o CURP para buscar', '<a href="">Necesitas ayuda?</a>');
+        return;
     }
+    
+    fetch(`/buscar?query=${searchQuery}`)
+    .then(response => response.json())
+    .then(data => {
+        if (data.length === 0) {
+            mensaje('warning', 'RESULTADO', 'No se encontraron resultados', '<a href="">Necesitas ayuda?</a>');
+            return;
+        }
+        // Mostrar datos encontrados
+        document.getElementById('f_nc').value = data[0].nc;
+        document.getElementById('f_curp').value = data[0].curp;
+        document.getElementById('f_nombre').value = data[0].nombre;
+        document.getElementById('f_paterno').value = data[0].paterno;
+        document.getElementById('f_materno').value = data[0].materno;
+        document.getElementById('f_telefono').value = data[0].telefono;
+        document.getElementById('f_celular').value = data[0].celular;
+        document.getElementById('f_correo').value = data[0].correo;
+        document.getElementById('f_nivel').value = data[0].nivel;
+        document.getElementById('f_mun').value = data[0].mun;
+        document.getElementById('f_asunto').value = data[0].asunto;
+
+        // Mostrar botones de actualizar y eliminar
+        document.getElementById('update-delete-buttons').style.display = 'flex';
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const buscarBtn = document.getElementById('buscarBtn');
+    const updateDeleteButtons = document.getElementById('update-delete-buttons');
+    
+    buscarBtn.addEventListener('click', function() {
+        updateDeleteButtons.style.display = 'block';
+    });
 });
 
-function buscarFormulario(buscarTerm) {
-    fetch(`/buscar_formulario?term=${buscarTerm}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                const formData = data.formulario;
-                document.getElementById("f_nc").value = formData.nombre_completo;
-                document.getElementById("f_curp").value = formData.curp;
-                document.getElementById("f_nombre").value = formData.nombre;
-                document.getElementById("f_paterno").value = formData.paterno;
-                document.getElementById("f_materno").value = formData.materno;
-                document.getElementById("f_telefono").value = formData.telefono;
-                document.getElementById("f_celular").value = formData.celular;
-                document.getElementById("f_correo").value = formData.correo;
-                document.getElementById("f_nivel").value = formData.id_nivel;
-                document.getElementById("f_mun").value = formData.id_mun;
-                document.getElementById("f_asunto").value = formData.id_asunto;
 
-                document.getElementById("update-delete-buttons").style.display = "block";
-            } else {
-                mensaje('error', 'No Encontrado', 'No se encontró ningún formulario con los datos ingresados.', '');
-            }
-        })
-        .catch(error => console.error('Error:', error));
+function actualizar() {
+    // Lógica para actualizar
+    console.log("Actualizando...");
+}
+
+function eliminar() {
+    // Lógica para eliminar
+    console.log("Eliminando...");
 }

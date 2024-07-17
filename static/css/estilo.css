@@ -58,11 +58,41 @@ h1{
     justify-content: center;
 }
 
-.update-delete-buttons{
-    padding: auto;
-    padding-top: 20px;
+.action-buttons {
     display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.action-buttons .left {
+    flex: 1;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.action-buttons .right {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.action-buttons .right input {
+    width: 300px;
+    margin-right: 10px;
+}
+
+.action-buttons .right button {
+    display: flex;
+    align-items: center;
     justify-content: center;
+}
+
+#update-delete-buttons {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
 }
 
 .footer{
