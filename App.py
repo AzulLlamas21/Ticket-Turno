@@ -1,9 +1,9 @@
 from flask import Flask, render_template, url_for, request, redirect, jsonify, send_file, session
 from model.db import init_db
-#from model.package_model.Usuario import Usuarios
+from model.package_model.Usuario import Usuario
 from model.package_model.Formulario import Formulario
 from model.package_model.Nivel import Nivel
-from  model.package_model.Municipio import Municipio
+from model.package_model.Municipio import Municipio
 from model.package_model.Asunto import Asunto
 import os
 import qrcode
@@ -50,7 +50,7 @@ def login():
             usuario = request.form.get('f_user')
             contrasena = request.form.get('f_pwd')
         
-        usuario_model = Usuarios()
+        usuario_model = Usuario()
         user = usuario_model.verificar_credenciales(usuario, contrasena)
 
         if user:
@@ -73,9 +73,8 @@ def admin_logout():
 #ADMINISTRADOR(OBTENER LISTA DE FORMULARIO)
 @app.route('/admin')
 def admin():
-    # formulario_model = Formulario()
-    # forms = formulario_model.obtener_formularios()
-    return render_template('admin.html')#, forms=forms)
+    forms = Formulario.obtener_formularios()
+    return render_template('admin.html', forms=forms)
 
 #IR A DASHBOARD
 @app.route('/dashboard')

@@ -26,7 +26,7 @@
         <table>
             <thead>
                 <tr>
-                    <th>ID</th>
+                    <th>No_Turno</th>
                     <th>CURP</th>
                     <th>Nombre</th>
                     <th>Apellido Paterno</th>
@@ -34,6 +34,9 @@
                     <th>Teléfono</th>
                     <th>Celular</th>
                     <th>Correo</th>
+                    <th>Id_Nivel</th>
+                    <th>Id_Municipio</th>
+                    <th>Id_Asunto</th>
                     <th>Estado</th>
                     <th>Acciones</th>
                 </tr>
@@ -41,18 +44,21 @@
             <tbody>
                 {% for form in forms %}
                     <tr>
-                        <td>{{ form[0] }}</td>
-                        <td>{{ form[1] }}</td>
-                        <td>{{ form[2] }}</td>
-                        <td>{{ form[3] }}</td>
-                        <td>{{ form[4] }}</td>
-                        <td>{{ form[5] }}</td>
-                        <td>{{ form[6] }}</td>
-                        <td>{{ form[7] }}</td>
-                        <td>{{ form[11] }}</td>
+                        <td>{{ form.no_turno }}</td>
+                        <td>{{ form.curp }}</td>
+                        <td>{{ form.nombre }}</td>
+                        <td>{{ form.paterno }}</td>
+                        <td>{{ form.materno }}</td>
+                        <td>{{ form.telefono }}</td>
+                        <td>{{ form.celular }}</td>
+                        <td>{{ form.correo }}</td>
+                        <td>{{ form.id_nivel }}</td>
+                        <td>{{ form.id_mun }}</td>
+                        <td>{{ form.id_asunto }}</td>
+                        <td>{{ form.estado }}</td>
                         <td>
-                            <button onclick="updateForm({{ form[0] }}, {{ form[9] }})">Actualizar</button>
-                            <button onclick="deleteForm({{ form[0] }}, {{ form[9] }})">Eliminar</button>
+                            <button onclick="updateForm('{{ form.no_turno }}', '{{ form.id_mun }}')">Actualizar</button>
+                            <button onclick="deleteForm('{{ form.no_turno }}', '{{ form.id_mun }}')">Eliminar</button>
                         </td>
                     </tr>
                 {% endfor %}

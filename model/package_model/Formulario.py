@@ -5,6 +5,7 @@ from model.db import Base, get_bd
 class Formulario(Base):
     __tablename__ = 'formulario'
     no_turno = Column(Integer, primary_key=True)
+    id_mun = Column(Integer, ForeignKey('municipio.id'), primary_key=True)  # Define la ForeignKey aquí
     curp = Column(String(18), nullable=False)
     nombre = Column(String(255), nullable=False)
     paterno = Column(String(255), nullable=False)
@@ -13,18 +14,21 @@ class Formulario(Base):
     celular = Column(String(10), nullable=False)
     correo = Column(String(100), nullable=False)
     id_nivel = Column(Integer, ForeignKey('nivel.id'), nullable=False)
-    id_mun = Column(Integer, ForeignKey('municipio.id'), nullable=False)
     id_asunto = Column(Integer, ForeignKey('asunto.id'), nullable=False)
     estado = Column(String(255), nullable=True)
 
     nivel = relationship("Nivel")
-    municipio = relationship("Municipio")
+    municipio = relationship("Municipio")  # Asegúrate de que "Municipio" esté correctamente importado y definido
     asunto = relationship("Asunto")
 
     @staticmethod
     def obtener_formularios():
         bd = next(get_bd())
-        return bd.query(Formulario).all()
+        formularios = bd.query(Formulario).all()
+        print(f"Total formularios: {len(formularios)}")  # Debug print
+        for formulario in formularios:
+            print(f"No Turno: {formulario.no_turno}, Nombre: {formulario.nombre}")  # Debug print
+        return formularios
 
     @staticmethod
     def obtener_formularios_por_municipio(id_mun):

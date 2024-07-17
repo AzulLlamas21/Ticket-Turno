@@ -1,12 +1,13 @@
-function searchForm(id, id_mun) {
-    window.location.href = `/search/${id}/${id_mun}`;
+function searchForm() {
+    const searchQuery = document.getElementById('buscar').value;
+    window.location.href = `/search?query=${searchQuery}`;
 }
 
-function updateForm(id, id_mun) {
-    window.location.href = `/update/${id}/${id_mun}`;
+function updateForm(noTurno, idMun) {
+    window.location.href = `/update/${noTurno}/${idMun}`;
 }
 
-function deleteForm(id, id_mun) {
+function deleteForm(noTurno, idMun) {
     Swal.fire({
         icon: 'warning',
         title: '¿Estás seguro?',
@@ -17,8 +18,7 @@ function deleteForm(id, id_mun) {
         confirmButtonText: 'Sí, eliminarlo!'
     }).then((result) => {
         if (result.isConfirmed) {
-            window.location.href = `/delete/${id}/${id_mun}`;
+            window.location.href = `/delete/${noTurno}/${idMun}`;
         }
     });
 }
-
