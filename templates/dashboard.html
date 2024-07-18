@@ -6,10 +6,10 @@
     <title>Dashboard</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <header>
+        <img src="{{ url_for('static', filename='img/logo_favicon.png') }}">
         <h1>Dashboard de Solicitudes</h1>
     </header>
     <header>
@@ -18,26 +18,26 @@
     </header>
 
     <main>
-        <label for="municipio">Filtrar por Municipio:</label>
-        <input type="text" id="municipio" placeholder="Ingrese el municipio">
-        <button onclick="loadDashboard()">Filtrar</button>
+        <section>
+            <h1>Gráfico Circular de Total de Solicitudes</h1>
+            <button onclick="loadCircularChart()">Cargar Gráfico Circular</button>
+            <div id="circular-chart-container">
+                <img id="circular-chart" src="" alt="Gráfico Circular de Estado de Solicitudes">
+            </div>
+        </section>
         
-        <div id="chart-container">
-            <img id="chart" src="" alt="Gráfico de Estado de Solicitudes">
-        </div>
+        <section>
+            <h1>Gráfico de Barras de Solicitudes por Municipio</h1>
+            <label for="municipio">Filtrar por Municipio:</label>
+            <input type="text" id="municipio" placeholder="Ingrese el municipio">
+            <button onclick="loadBarChart()">Filtrar</button>
+            <div id="bar-chart-container">
+                <img id="bar-chart" src="" alt="Gráfico de Barras de Estado de Solicitudes por Municipio">
+            </div>
+        </section>
     </main>
 
-    <script>
-        function loadDashboard() {
-            const municipio = document.getElementById('municipio').value;
-            fetch(`/dashboard/data?municipio=${municipio}`)
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('chart').src = data.image;
-                });
-        }
-
-        window.onload = loadDashboard;
-    </script>
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}" defer></script>
+    
 </body>
 </html>

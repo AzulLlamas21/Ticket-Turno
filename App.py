@@ -81,32 +81,80 @@ def admin():
 def dashboard():
     return render_template('dashboard.html')
 
-#DASHBOARD
-@app.route('/dashboard/data')
-def dashboard_data():
-    municipio = request.args.get('municipio')
-    formulario_model = Formulario()
-    if municipio:
-        forms = formulario_model.obtener_formularios_por_municipio(municipio)
-    else:
+# DASHBOARD: Gráfico Circular de Total de Solicitudes
+@app.route('/dashboard/circular')
+def dashboard_circular():
+    try:
+        formulario_model = Formulario()
         forms = formulario_model.obtener_formularios()
-    
-    df = pd.DataFrame(forms, columns=['no_turno', 'curp', 'nombre', 'paterno', 'materno', 'telefono', 'celular', 'correo', 'id_nivel', 'id_mun', 'id_asunto', 'estado'])
-    estado_counts = df['estado'].value_counts()
-    
-    plt.figure(figsize=(10, 6))
-    estado_counts.plot(kind='bar', color=['green', 'blue', 'red'])
-    plt.title('Estado de Solicitudes')
-    plt.xlabel('Estado')
-    plt.ylabel('Cantidad')
 
-    buf = io.BytesIO()
-    plt.savefig(buf, format='png')
-    buf.seek(0)
-    image_base64 = base64.b64encode(buf.getvalue()).decode('utf-8')
-    buf.close()
+        df = pd.DataFrame([form.__dict__ for form in forms])
+        estado_counts = df['estado'].value_counts()
 
-    return jsonify({'image': 'data:image/png;base64,{}'.format(image_base64)})
+        plt.figure(figsize=(10, 6))
+        estado_counts.plot(kind='pie', autopct=lambda p: '{:.1f}% ({:.0f})'.format(p, (p/100)*estado_counts.sum()), colors=['green', 'blue', 'red'])
+        plt.title('Estado de Solicitudes')
+
+        buf = io.BytesIO()
+        plt.savefig(buf, format='png')
+        buf.seek(0)
+        image_base64 = base64.b64encode(buf.getvalue()).decode('utf-8')
+        buf.close()
+
+        return jsonify({'image': 'data:image/png;base64,{}'.format(image_base64)})
+    except Exception as e:
+        print(f"Error en /dashboard/circular: {e}")
+        return jsonify({'error': str(e)}), 500
+
+# DASHBOARD: Gráfico de Barras de Solicitudes por Municipio
+@app.route('/dashboard/bar')
+def dashboard_bar():
+    try:
+        municipio = request.args.get('municipio', '')
+        print(f"Municipio recibido: {municipio}")  # Debug print
+        formulario_model = Formulario()
+
+        if municipio:
+            forms = formulario_model.obtener_formularios_por_nombre_municipio(municipio)
+        else:
+            forms = formulario_model.obtener_formularios()
+
+        df = pd.DataFrame([form.__dict__ for form in forms])
+        print(f"DataFrame creado con {len(df)} formularios")  # Debug print
+
+        municipios = df['id_mun'].unique()
+        estados = ['Pendiente', 'Activo', 'Resuelto']
+
+        data = {mun: {estado: 0 for estado in estados} for mun in municipios}
+        for index, row in df.iterrows():
+            data[row['id_mun']][row['estado']] += 1
+
+        municipio_model = Municipio()
+        municipio_names = {m[0]: m[1] for m in municipio_model.obtener_municipios()}
+        print(f"Nombre de municipios obtenidos: {municipio_names}")  # Debug print
+
+        plt.figure(figsize=(15, 8))
+        bar_width = 0.25
+        positions = range(len(municipios))
+        for i, estado in enumerate(estados):
+            plt.bar([pos + i*bar_width for pos in positions], [data[m][estado] for m in municipios], bar_width, align='center', label=estado)
+
+        plt.xticks([pos + bar_width for pos in positions], [municipio_names[m] for m in municipios])
+        plt.title('Estado de Solicitudes por Municipio')
+        plt.xlabel('Municipio')
+        plt.ylabel('Cantidad')
+        plt.legend()
+
+        buf = io.BytesIO()
+        plt.savefig(buf, format='png')
+        buf.seek(0)
+        image_base64 = base64.b64encode(buf.getvalue()).decode('utf-8')
+        buf.close()
+
+        return jsonify({'image': 'data:image/png;base64,{}'.format(image_base64)})
+    except Exception as e:
+        print(f"Error en /dashboard/bar: {e}")  # Debug print
+        return jsonify({'error': str(e)}), 500
 
 #BUSCAR FORMULARIO
 @app.route('/buscar_formulario', methods=['GET'])

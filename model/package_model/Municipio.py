@@ -5,13 +5,20 @@ from model.db import Base, get_bd
 class Municipio(Base):
     __tablename__ = 'municipio'
     id = Column(Integer, primary_key=True, autoincrement=True)
-    municipio = Column(String(30), nullable=False)
+    municipio = Column(String(255), nullable=False)
+    
+    formularios = relationship("Formulario", back_populates="municipio")
 
     @staticmethod
     def obtener_municipios():
         bd = next(get_bd())
         return [(municipio.id, municipio.municipio) for municipio in bd.query(Municipio).all()]
 
+    @staticmethod
+    def obtener_todos_los_municipios():
+        bd = next(get_bd())
+        return bd.query(Municipio).all()
+    
     @staticmethod
     def obtener_municipio_por_id(id):
         bd = next(get_bd())

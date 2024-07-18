@@ -1,11 +1,12 @@
-from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy import Column, ForeignKey, Integer, String,  ForeignKey
 from sqlalchemy.orm import relationship
 from model.db import Base, get_bd
+from model.package_model.Municipio import Municipio
 
 class Formulario(Base):
     __tablename__ = 'formulario'
     no_turno = Column(Integer, primary_key=True)
-    id_mun = Column(Integer, ForeignKey('municipio.id'), primary_key=True)  # Define la ForeignKey aquí
+    id_mun = Column(Integer, ForeignKey('municipio.id'), primary_key=True)
     curp = Column(String(18), nullable=False)
     nombre = Column(String(255), nullable=False)
     paterno = Column(String(255), nullable=False)
@@ -18,7 +19,7 @@ class Formulario(Base):
     estado = Column(String(255), nullable=True)
 
     nivel = relationship("Nivel")
-    municipio = relationship("Municipio")  # Asegúrate de que "Municipio" esté correctamente importado y definido
+    municipio = relationship("Municipio", back_populates="formularios")
     asunto = relationship("Asunto")
 
     @staticmethod
@@ -38,7 +39,12 @@ class Formulario(Base):
     @staticmethod
     def obtener_formularios_por_nombre_municipio(municipio):
         bd = next(get_bd())
-        return bd.query(Formulario).join(Formulario.municipio).filter(Municipio.nombre == municipio).all()
+        formularios = bd.query(Formulario).join(Formulario.municipio).filter(Municipio.municipio == municipio).all()
+        print(f"Formularios para el municipio '{municipio}': {len(formularios)}")  # Debug print
+        for formulario in formularios:
+            print(f"No Turno: {formulario.no_turno}, Nombre: {formulario.nombre}")  # Debug print
+        return formularios
+
 
     @staticmethod
     def obtener_formularios_por_estado(estado):
