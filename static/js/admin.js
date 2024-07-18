@@ -18,7 +18,18 @@ function deleteForm(noTurno, idMun) {
         confirmButtonText: 'Sí, eliminarlo!'
     }).then((result) => {
         if (result.isConfirmed) {
-            window.location.href = `/delete/${noTurno}/${idMun}`;
+            fetch(`/delete/${noTurno}/${idMun}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then(response => {
+                if (response.ok) {
+                    window.location.reload();
+                } else {
+                    Swal.fire('Error', 'No se pudo eliminar el formulario', 'error');
+                }
+            });
         }
     });
 }

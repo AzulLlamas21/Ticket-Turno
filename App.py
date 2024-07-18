@@ -85,9 +85,26 @@ def admin():
 #IR A ACTUALIZAR
 @app.route('/actualizar')
 def actualizar():
-    if not 'admin' in session:
+    if 'admin' not in session:
         return redirect(url_for('login'))
-    return render_template('actualizar.html')
+    
+    lista_niveles = Nivel.obtener_niveles()
+    lista_municipios = Municipio.obtener_municipios()
+    lista_asuntos = Asunto.obtener_asuntos()
+    
+    # Verificar y manejar caso de listas vacías aquí si es necesario
+    
+    return render_template('actualizar.html', lista_niveles=lista_niveles, lista_municipios=lista_municipios, lista_asuntos=lista_asuntos)
+
+#IR A ACTUALIZAR FORMULARIO CON DATOS EXISTENTES
+@app.route('/update/<int:no_turno>/<int:id_mun>')
+def update(no_turno, id_mun):
+    if 'admin' not in session:
+        return redirect(url_for('login'))
+    formulario = Formulario.obtener_formulario_por_no_turno(no_turno, id_mun)
+    if not formulario:
+        return redirect(url_for('admin'))
+    return render_template('actualizar.html', formulario=formulario)
 
 #IR A DASHBOARD
 @app.route('/dashboard')
@@ -207,16 +224,13 @@ def actualizar_formulario():
     return jsonify(success=False)
 
 #ELIMINA EL FORMULARIO
-@app.route('/eliminar_formulario', methods=['POST'])
-def eliminar_formulario():
-    data = request.get_json()
-    # Elimina el formulario de la base de datos
-    formulario = Formulario.eliminar_formulario(data['no_turno'], data['id_mun'])
-    if formulario:
-        for key, value in data.items():
-            setattr(formulario, key, value)
-        Formulario.modificar_formulario(formulario)
-        return jsonify(success=True)
+@app.route('/delete/<int:no_turno>/<int:id_mun>', methods=['POST'])
+def delete(no_turno, id_mun):
+    if 'admin' not in session:
+        return redirect(url_for('login'))
+    resultado = Formulario.eliminar_formulario(no_turno, id_mun)
+    if resultado:
+        return redirect(url_for('admin'))
     return jsonify(success=False)
 
 #GENERAR TICKET

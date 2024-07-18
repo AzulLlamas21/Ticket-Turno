@@ -1,4 +1,4 @@
-/*BUSCAR FORMLUARIO*/
+/*BUSCAR FORMULARIO*/
 function buscarFormulario() {
     const noTurno = document.getElementById('buscarNoTurno').value.trim();
     const curp = document.getElementById('buscarCurp').value.trim();
@@ -28,8 +28,8 @@ function buscarFormulario() {
                 document.getElementById('f_celular').value = formulario.celular;
                 document.getElementById('f_correo').value = formulario.correo;
                 document.getElementById('f_nivel').value = formulario.id_nivel;
-                document.getElementById('f_mun').value = formulario.id_mun;
-                document.getElementById('f_mun').disabled = true;
+                document.getElementById('f_municipio').value = formulario.id_mun;
+                document.getElementById('f_municipio').disabled = true;
                 document.getElementById('f_asunto').value = formulario.id_asunto;
                 document.getElementById('update-delete-buttons').style.display = 'block';
                 document.getElementById('btn_turno').style.display = "none";
@@ -48,7 +48,7 @@ function buscarFormulario() {
 
 document.getElementById('buscarBtn').addEventListener('click', buscarFormulario);
 
-/*ACTUALIZAR FORMLUARIO*/
+/*ACTUALIZAR FORMULARIO*/
 function actualizarFormulario(){
     const nombre_completo = document.getElementById('f_nc').value;
     const curp = document.getElementById('f_curp').value;
@@ -86,16 +86,18 @@ function actualizarFormulario(){
     .then(response => response.json())
     .then(data => {
         console.log('Success:', data);
-        mensaje('success', 'Acutalizado!!', 'El turno se ha actualizado correctamente');
+        mensaje('success', '¡Actualizado!', 'El turno se ha actualizado correctamente');
     })
     .catch((error) => {
         console.error('Error:', error);
-        mensaje('error', 'Error!!', 'El turno no se pudo actualizar');
+        mensaje('error', '¡Error!', 'El turno no se pudo actualizar');
     });
 }
 
 // Función para limpiar los campos del formulario
 function limpiarCampos() {
+    document.getElementById('buscarNoTurno').value = '';
+    document.getElementById('buscarCurp').value = '';
     document.getElementById('f_nc').value = '';
     document.getElementById('f_curp').value = '';
     document.getElementById('f_nombre').value = '';
@@ -108,4 +110,13 @@ function limpiarCampos() {
     document.getElementById('f_mun').value = '0';
     document.getElementById('f_asunto').value = '0';
     document.getElementById('update-delete-buttons').style.display = 'none';
+}
+
+// Función para mostrar mensajes utilizando SweetAlert2
+function mensaje(icon, title, text) {
+    Swal.fire({
+        icon: icon,
+        title: title,
+        text: text,
+    });
 }

@@ -19,7 +19,7 @@
     </header>
 
     <main>
-        <button onclick="window.location.href='/actualizar'">Registrar Nuevo Formulario</button>
+        <button onclick="window.location.href='/index'">Registrar Nuevo Formulario</button>
         <input type="text" id="buscar" placeholder="Buscar por nombre completo o CURP">
         <button onclick="searchForm()">Buscar</button>
             
@@ -57,8 +57,8 @@
                         <td>{{ form.id_asunto }}</td>
                         <td>{{ form.estado }}</td>
                         <td>
-                            <button onclick="window.location.href='/actualizar('{{ form.no_turno }}', '{{ form.id_mun }}')'">Actualizar</button>
-                            <button onclick="window.location.href='/eliminar_Formulario('{{ form.no_turno }}', '{{ form.id_mun }}')'">Eliminar</button>
+                            <button onclick="updateForm('{{ form.no_turno }}', '{{ form.id_mun }}')">Actualizar</button>
+                            <button onclick="deleteForm('{{ form.no_turno }}', '{{ form.id_mun }}')">Eliminar</button>
                         </td>
                     </tr>
                 {% endfor %}
