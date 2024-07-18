@@ -17,7 +17,7 @@ from fpdf import FPDF
 
 app = Flask(__name__)
 init_db
-
+app.secret_key = 'keykey'
 HCAPTCHA_SECRET = 'ES_ef2fbcaf50b4434f9d9b9d05d4cd6ae3'
 
 
@@ -40,20 +40,17 @@ def index():
 #LOGIN
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    if 'admin' in session:
+        return redirect(url_for('admin'))
     if request.method == 'POST':
-        if request.is_json:
-            data = request.get_json()
-            print(data, '\n\n\n')
-            usuario = data.get('f_user')
-            contrasena = data.get('f_pwd')
-        else:
-            usuario = request.form.get('f_user')
-            contrasena = request.form.get('f_pwd')
+        usuario = request.get_json()['f_user']
+        contrasena = request.get_json()['f_pwd']
         
         usuario_model = Usuario()
         user = usuario_model.verificar_credenciales(usuario, contrasena)
 
         if user:
+            session['admin'] = {'user': usuario, 'pass': contrasena}
             return jsonify({'redirect': url_for('admin')})
         else:
             return jsonify({'message': 'Usuario o contraseña incorrectos'})
@@ -63,22 +60,40 @@ def login():
 #CERRAR Y REGRESAR A INDEX
 @app.route('/logout')
 def logout():
+    session.pop('admin', None)
     return redirect(url_for('index'))
 
 #CERRAR Y REGRESAR A LOGIN
 @app.route('/admin_logout')
 def admin_logout():
+    session.pop('admin', None)
     return redirect(url_for('login'))
 
 #ADMINISTRADOR(OBTENER LISTA DE FORMULARIO)
 @app.route('/admin')
 def admin():
-    forms = Formulario.obtener_formularios()
+    if 'admin' not in session:
+        return redirect(url_for('login'))
+    query = request.args.get('query')
+    forms = []
+    if not query:
+        forms = Formulario.obtener_formularios()
+    else:
+        forms = Formulario.obtener_formularios_query(query)
     return render_template('admin.html', forms=forms)
+
+#IR A ACTUALIZAR
+@app.route('/actualizar')
+def actualizar():
+    if not 'admin' in session:
+        return redirect(url_for('login'))
+    return render_template('actualizar.html')
 
 #IR A DASHBOARD
 @app.route('/dashboard')
 def dashboard():
+    if not 'admin' in session:
+        return redirect(url_for('login'))
     return render_template('dashboard.html')
 
 # DASHBOARD: Gráfico Circular de Total de Solicitudes
@@ -121,7 +136,7 @@ def dashboard_bar():
 
         df = pd.DataFrame([form.__dict__ for form in forms])
         print(f"DataFrame creado con {len(df)} formularios")  # Debug print
-
+    
         municipios = df['id_mun'].unique()
         estados = ['Pendiente', 'Activo', 'Resuelto']
 
@@ -152,9 +167,9 @@ def dashboard_bar():
         buf.close()
 
         return jsonify({'image': 'data:image/png;base64,{}'.format(image_base64)})
-    except Exception as e:
-        print(f"Error en /dashboard/bar: {e}")  # Debug print
-        return jsonify({'error': str(e)}), 500
+    except Exception as error:
+        print(f"Error en /dashboard/bar: {error}")  # Debug print
+        return jsonify({'error': str(error)}), 500
 
 #BUSCAR FORMULARIO
 @app.route('/buscar_formulario', methods=['GET'])
@@ -178,29 +193,31 @@ def buscar_formulario():
 #     db.session.commit()
 #     return jsonify(success=True)
 
-# @app.route('/actualizar_formulario', methods=['PUT'])
-# def actualizar_formulario():
-#     data = request.get_json()
-#     # Actualiza el formulario en la base de datos
-#     formulario = Formulario.query.filter_by(curp=data['curp']).first()
-#     if formulario:
-#         for key, value in data.items():
-#             setattr(formulario, key, value)
-#         db.session.commit()
-#         return jsonify(success=True)
-#     return jsonify(success=False)
+#ACTUALIZA EL FORMULARIO EN LA BD
+@app.route('/actualizar_formulario', methods=['POST'])
+def actualizar_formulario():
+    data = request.get_json()
+    # Actualiza el formulario en la base de datos
+    formulario = Formulario.obtener_formulario_por_no_turno(data['no_turno'], data['id_mun'])
+    if formulario:
+        for key, value in data.items():
+            setattr(formulario, key, value)
+        Formulario.modificar_formulario(formulario)
+        return jsonify(success=True)
+    return jsonify(success=False)
 
-# @app.route('/eliminar_formulario', methods=['DELETE'])
-# def eliminar_formulario():
-#     curp = request.args.get('curp')
-#     # Elimina el formulario de la base de datos
-#     formulario = Formulario.query.filter_by(curp=curp).first()
-#     if formulario:
-#         db.session.delete(formulario)
-#         db.session.commit()
-#         return jsonify(success=True)
-#     return jsonify(success=False)
-
+#ELIMINA EL FORMULARIO
+@app.route('/eliminar_formulario', methods=['POST'])
+def eliminar_formulario():
+    data = request.get_json()
+    # Elimina el formulario de la base de datos
+    formulario = Formulario.eliminar_formulario(data['no_turno'], data['id_mun'])
+    if formulario:
+        for key, value in data.items():
+            setattr(formulario, key, value)
+        Formulario.modificar_formulario(formulario)
+        return jsonify(success=True)
+    return jsonify(success=False)
 
 #GENERAR TICKET
 @app.route('/generar_ticket', methods=['POST'])
@@ -222,18 +239,19 @@ def generar_ticket():
         f_nivel = request.form['f_nivel']
         f_mun = request.form['f_mun']
         f_asunto = request.form['f_asunto']
-        
+
         # Crear una instancia de Formulario y guardar en la base de datos
         nuevo_formulario = Formulario(
             curp=f_curp, nombre=f_nombre, paterno=f_paterno, materno=f_materno, 
             telefono=f_telefono, celular=f_celular, correo=f_correo, 
             id_nivel=f_nivel, id_mun=f_mun, id_asunto=f_asunto, estado='Pendiente'
         )
-        
+
         # Guardar el formulario en la base de datos
         resultado = Formulario.agregar_formulario(nuevo_formulario)
         if resultado == 1:
             # Éxito al guardar en la base de datos
+            no_turno = Formulario.obtener_no_turno_por_nombre_y_curp(f_nombre, f_paterno, f_materno, f_curp)
             datos = {
                 'nombre_completo': f_nc,
                 'curp': f_curp,
@@ -245,7 +263,8 @@ def generar_ticket():
                 'correo': f_correo,
                 'nivel': Nivel.obtener_nombre_por_id(f_nivel),
                 'municipio': Municipio.obtener_nombre_por_id(f_mun),
-                'asunto': Asunto.obtener_nombre_por_id(f_asunto)
+                'asunto': Asunto.obtener_nombre_por_id(f_asunto),
+                'no_turno': no_turno
             }
             return render_template('Ticket.html', datos=datos)
         else:
@@ -255,7 +274,6 @@ def generar_ticket():
     except Exception as e:
         print(f"Error al generar el ticket: {e}")
         return redirect(url_for('index'))
-
 
 #IR A TICKET
 @app.route('/ticket')
@@ -268,7 +286,7 @@ def generar_pdf():
     try:
         # Obtener datos del formulario
         data = request.json
-        
+
         # Directorios para guardar PDFs y QRs
         pdf_dir = os.path.join(app.root_path, 'static', 'pdf')
         qr_dir = os.path.join(app.root_path, 'static', 'qr')
@@ -284,9 +302,9 @@ def generar_pdf():
         pdf_output = os.path.join(pdf_dir, pdf_filename)
 
         # Verificar si ya existe un PDF con el mismo nombre
-        existing_pdf = obtener_archivo_existente(pdf_dir, f"{data['curp']}_{data['no_turno']}_ticket")
-        if existing_pdf:
-            pdf_output = os.path.join(pdf_dir, existing_pdf)
+        if os.path.exists(pdf_output):
+            pdf_url = url_for('static', filename=f'pdf/{pdf_filename}', _external=True)
+            return jsonify({'success': True, 'pdf_url': pdf_url})
 
         # Contenido del QR
         qr_content = f"CURP: {data['curp']}, No Turno: {data['no_turno']}"
@@ -294,8 +312,7 @@ def generar_pdf():
         qr_output = os.path.join(qr_dir, qr_filename)
 
         # Verificar si ya existe un QR con el mismo nombre
-        existing_qr = obtener_archivo_existente(qr_dir, f"{data['curp']}_{data['no_turno']}_qr")
-        if not existing_qr:
+        if not os.path.exists(qr_output):
             qr = qrcode.make(qr_content)
             qr.save(qr_output)
 
@@ -315,8 +332,7 @@ def generar_pdf():
         pdf.cell(200, 10, txt=f"Municipio: {data['municipio']}", ln=True, align='L')
         pdf.cell(200, 10, txt=f"Asunto: {data['asunto']}", ln=True, align='L')
 
-        if not existing_pdf:
-            pdf.image(qr_output, x=10, y=150, w=50)
+        pdf.image(qr_output, x=10, y=150, w=50)
 
         pdf.output(pdf_output)
 
@@ -328,7 +344,7 @@ def generar_pdf():
     except Exception as e:
         print(f"Error al generar el PDF: {e}")
         return jsonify({'success': False, 'message': str(e)})
-    
+ 
 if __name__ == '__main__':
     app.run(debug=True)
     

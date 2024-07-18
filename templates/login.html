@@ -22,21 +22,22 @@
                         <input type="text" class="form-control" id="f_user" name="f_user" placeholder="Usuario">
                     </div>
                     <div class="row">
-                        <label for="f_pass">Contraseña:</label>
+                        <label for="f_pwd">Contraseña:</label>
                         <input type="password" class="form-control" id="f_pwd" name="f_pwd" placeholder="Contraseña">
                     </div>
+                    <!-- Resto del formulario -->
+                
                     <div class="h-captcha" data-sitekey="f3d8cffe-eb54-48f6-a24a-7a7440bca0c0"></div>
                     <div class="row2">
-                        <button id="btn" class="btn_login" type="submit">Iniciar Sesión</button>
+                        <button id="btn_login" class="btn_login" type="submit">Iniciar Sesión</button>
                     </div>
                     <div class="row2">
-                        <button id="btn" class="btn_regresar" type="button" onclick="location.href='{{ url_for('index') }}'">Cerrar</button>
-                    </div>
+                        <button id="btn_regresar" class="btn_regresar" type="button" onclick="location.href='{{ url_for('index') }}'">Cerrar</button>
+                    </div>                    
                 </form>
             </div>
         </div>
     </div>
-    <script src="{{ url_for('static', filename='bootstrap-5.3.2/dist/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/sweetalert2.all.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/login.js') }}"></script>
 </body>

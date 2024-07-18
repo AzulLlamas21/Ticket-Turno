@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ticket Turno</title>
+    <title>Solicitud</title>
     <link rel="shortcut icon" type="image/png" href="{{ url_for('static', filename='img/logo_favicon.png') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap-5.3.2/dist/css/bootstrap.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/estilo.css') }}">
@@ -19,63 +19,67 @@
                 <h1>Ticket de Turno</h1>
             </div>
 
-            <div class="row3">
-                <!-- Botones adicionales -->
-                <div class="additional-buttons">
-                    <button id="btn" class="btn_pdf" onclick="generarPDF()">Generar PDF</button>
-                    <input type="text" id="buscar" placeholder="Buscar por nombre completo o CURP">
-                    <button id="btn" class="btn_buscar" onclick="buscar()">Buscar</button>
+            
+            <header>
+                <div class="left">
+                        <button onclick="window.location.href='/admin_logout'">Cerrar Sesión</button>
+                        <button onclick="window.location.href='/admin'">Administrar Formularios</button>
                 </div>
-            </div>
+                <div class="right">
+                    <input type="text" id="buscarNoTurno" placeholder="Buscar por no_turno">
+                    <input type="text" id="buscarCurp" placeholder="Buscar por CURP">
+                    <button id="buscarBtn" type="button">Buscar</button>
+                </div>
+                <div class="bottom-right">
+                    <button type="button" id="btn_actualizar" class="btn_actualizar" onclick="actualizarFormulario()">Actualizar</button>
+                    <button type="button" id="btn_eliminar" class="btn_eliminar" onclick="window.location.href='/eliminar_Formulario()">Eliminar</button>
+                    <button type="button" id="btn_pdf" class="btn_pdf" onclick="generarPDF()">Generar PDF</button>
+                </div>
+            </header>
 
             <div class="cont">
                 <div class="row">
-                    <label for="f_no_turno">Número de Turno:</label>
-                    <input type="text" name="f_no_turno" id="f_no_turno" placeholder="Número de Turno">
-                </div>
-
-                <div class="row">
                     <label for="f_nc">Nombre completo de quien realizará el trámite:</label>
-                    <input type="text" name="f_nc" id="f_nc" placeholder="nombre completo">
+                    <input type="text" name="f_nc" id="f_nc" placeholder="Ingrese nombre completo">
                 </div>
 
                 <div class="row">
                     <label for="f_curp">CURP:</label>
-                    <input class="mayusculas" type="text" name="f_curp" id="f_curp" placeholder="CURP">
+                    <input class="mayusculas" type="text" name="f_curp" id="f_curp" placeholder="Ingrese CURP">
                 </div>
             </div>
 
             <div class="cont">
                 <div class="row">
                     <label for="f_nombre">Nombre:</label>
-                    <input type="text" name="f_nombre" id="f_nombre" placeholder="nombre">
+                    <input type="text" name="f_nombre" id="f_nombre" placeholder="Ingrese nombre">
                 </div>
 
                 <div class="row">
                     <label for="f_paterno">Paterno:</label>
-                    <input type="text" name="f_paterno" id="f_paterno" placeholder="apellido paterno">
+                    <input type="text" name="f_paterno" id="f_paterno" placeholder="Ingrese apellido paterno">
                 </div>
 
                 <div class="row">
                     <label for="f_materno">Materno:</label>
-                    <input type="text" name="f_materno" id="f_materno" placeholder="apellido materno">
+                    <input type="text" name="f_materno" id="f_materno" placeholder="Ingrese apellido materno">
                 </div>
             </div>
 
             <div class="cont">
                 <div class="row">
                     <label for="f_telefono">Teléfono:</label>
-                    <input type="tel" name="f_telefono" id="f_telefono" placeholder="teléfono">
+                    <input type="tel" name="f_telefono" id="f_telefono" placeholder="Ingrese teléfono">
                 </div>
 
                 <div class="row">
                     <label for="f_celular">Celular:</label>
-                    <input type="tel" name="f_celular" id="f_celular" placeholder="celular">
+                    <input type="tel" name="f_celular" id="f_celular" placeholder="Ingrese celular">
                 </div>
 
                 <div class="row">
                     <label for="f_correo">Correo:</label>
-                    <input type="text" name="f_correo" id="f_correo" placeholder="correo">
+                    <input type="text" name="f_correo" id="f_correo" placeholder="Ingrese correo">
                 </div>
             </div>
 
@@ -83,69 +87,69 @@
                 <div class="row">
                     <label for="f_nivel">¿Nivel al que desea ingresar o que ya cursa el alumno?</label>
                     <select name="f_nivel" id="f_nivel">
-                        <option value="0">Selección:</option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                        <option value="8">8</option>
-                        <option value="9">9</option>
+                        {% if lista_niveles|length != 0 %}
+                            <option value="0">Seleccione:</option>
+                            {% for nv in lista_niveles %}
+                                <option value="{{ nv[0] }}">{{ nv[1] }}</option>
+                            {% endfor %}
+                        {% else %}
+                            <option value="0">No hay Datos</option>
+                        {% endif %}
                     </select>
                 </div>
             </div>
-
+            
             <div class="cont">
-                <p>Para poder actualizar debe escribir el no_turno y el municipio del registro, de lo contrario no se podrá actualizar(Si quiere editar el municipio elimine el formulario y cree otro)</p>
                 <div class="row">
                     <label for="f_mun">Municipio donde desea estudie el alumno:</label>
                     <select name="f_mun" id="f_mun">
-                        <option value="0">Selección:</option>
-                        <option value="1">Saltillo</option>
-                        <option value="2">Arteaga</option>
-                        <option value="3">Ramos Arizpe</option>
-                        <option value="4">Monclova</option>
-                        <option value="5">Torreón</option>
-                        <option value="6">Acuña</option>
-                        <option value="7">Ocampo</option>
-                        <option value="8">Piedras Negras</option>
+                        {% if lista_municipios|length != 0 %}
+                            <option value="0">Seleccione:</option>
+                            {% for mun in lista_municipios %}
+                                <option value="{{ mun[0] }}">{{ mun[1] }}</option>
+                            {% endfor %}
+                        {% else %}
+                            <option value="0">No hay Datos</option>
+                        {% endif %}
                     </select>
                 </div>
             </div>
-
+            
             <div class="cont">
                 <div class="row">
                     <label for="f_asunto">Seleccione el asunto que va a tratar:</label>
                     <select name="f_asunto" id="f_asunto">
-                        <option value="0">Selección:</option>
-                        <option value="1">Ingreso</option>
-                        <option value="2">Egreso</option>
-                        <option value="3">Pago de Inscripción</option>
-                        <option value="4">Selección de Horario</option>
-                        <option value="5">Recoger papelería</option>
+                        {% if lista_asuntos|length != 0 %}
+                            <option value="0">Seleccione:</option>
+                            {% for asu in lista_asuntos %}
+                                <option value="{{ asu[0] }}">{{ asu[1] }}</option>
+                            {% endfor %}
+                        {% else %}
+                            <option value="0">No hay Datos</option>
+                        {% endif %}
                     </select>
                 </div>
             </div>
 
-            <div class="row">
-                <label for="f_estado">Estado:</label>
-                <input type="text" name="f_estado" id="f_estado" placeholder="nombre completo">
+            <div class="cont">
+                <div class="row">
+                    <label for="f_estado">Estado:</label>
+                    <select name="f_estado" id="f_estado">
+                        <option value="0">Pendienta</option>
+                        <option value="1">Activo</option>
+                        <option value="2">Registro</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row3">
+                <button id="btn_turno" class="btn_turno" type="submit">Crear</button>
             </div>
         </form>
-
-        <div class="row3">
-            <!-- Botones de actualizar y eliminar ocultos -->
-            <div id="update-delete-buttons" style="display: none;">
-                <button id="btn" class="btn_actualizar" onclick="actualizar()">Actualizar</button>
-                <button id="btn" class="btn_eliminar" onclick="eliminar()">Eliminar</button>
-            </div>
-        </div>
-
     </div>
 
     <script src="{{ url_for('static', filename='bootstrap-5.3.2/dist/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/actualizar_admin.js') }}" defer></script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Integer, String,  ForeignKey
+from sqlalchemy import Column, ForeignKey, Integer, String,  ForeignKey, or_
 from sqlalchemy.orm import relationship
 from model.db import Base, get_bd
 from model.package_model.Municipio import Municipio
@@ -21,6 +21,19 @@ class Formulario(Base):
     nivel = relationship("Nivel")
     municipio = relationship("Municipio", back_populates="formularios")
     asunto = relationship("Asunto")
+
+    @staticmethod
+    def obtener_formularios_query(query):
+        bd = next(get_bd())
+        condition = or_(
+            Formulario.curp.like(f'%{query}%'),
+            (Formulario.nombre + ' ' + Formulario.paterno + ' ' + Formulario.materno).like(f'%{query}%')
+        )
+        formularios = bd.query(Formulario).filter(condition).all()
+        print(f"Total formularios: {len(formularios)}")  # Debug print
+        for formulario in formularios:
+            print(f"No Turno: {formulario.no_turno}, Nombre: {formulario.nombre}")
+        return formularios
 
     @staticmethod
     def obtener_formularios():
@@ -112,7 +125,6 @@ class Formulario(Base):
             bd = next(get_bd())
             formulario = bd.query(Formulario).filter_by(no_turno=obj_form.no_turno, id_mun=obj_form.id_mun).first()
             if formulario:
-                formulario.curp = obj_form.curp
                 formulario.nombre = obj_form.nombre
                 formulario.paterno = obj_form.paterno
                 formulario.materno = obj_form.materno
@@ -160,6 +172,24 @@ class Formulario(Base):
         except Exception as e:
             print(f"Error al obtener números de turno: {e}")
             return []
+        
+    @staticmethod
+    def obtener_no_turno_por_nombre_y_curp(nombre, paterno, materno, curp):
+        try:
+            bd = next(get_bd())
+            formulario = bd.query(Formulario).filter_by(
+                nombre=nombre,
+                paterno=paterno,
+                materno=materno,
+                curp=curp
+            ).first()
+            if formulario:
+                return formulario.no_turno
+            else:
+                return None
+        except Exception as e:
+            print(f"Error al obtener número de turno por nombre y CURP: {e}")
+            return None
 
     @staticmethod
     def encontrar_proximo_numero_de_turno_disponible(id_mun):
@@ -168,3 +198,19 @@ class Formulario(Base):
             return max(numeros_existentes) + 1
         else:
             return 1
+        
+    def to_dict(self):
+        return {
+            'no_turno': self.no_turno,
+            'id_mun': self.id_mun,
+            'curp': self.curp,
+            'nombre': self.nombre,
+            'paterno': self.paterno,
+            'materno': self.materno,
+            'telefono': self.telefono,
+            'celular': self.celular,
+            'correo': self.correo,
+            'id_nivel': self.id_nivel,
+            'id_asunto': self.id_asunto,
+            'estado': self.estado
+        }

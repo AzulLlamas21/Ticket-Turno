@@ -1,20 +1,26 @@
 function loadCircularChart() {
     fetch(`/dashboard/circular`)
-        .then(response => response.json())
-        .then(data => {
-            document.getElementById('circular-chart').src = data.image;
-        });
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('circular-chart').src = data.image;
+    });
 }
 
 function loadBarChart() {
-    var municipio = $('#municipio-input').val();
-    $.getJSON('/dashboard/bar', { municipio: municipio }, function(data) {
-        if (data.image) {
-            $('#bar-chart-img').attr('src', data.image);
-        } else {
-            console.error('Error al cargar el gráfico de barras:', data.error);
-        }
+    const searchParams = new URLSearchParams(window.location.search);
+    const municipio = searchParams.get('municipio');
+    const url = municipio ? `/dashboard/bar?municipio=${municipio}` : '/dashboard/bar';
+    
+    fetch(url)
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('bar-chart').src = data.image;
     });
+}
+
+function searchMunicipio() {
+    const searchQuery = document.getElementById('buscar').value;
+    window.location.href = `/dashboard?municipio=${searchQuery}`;
 }
 
 window.onload = () => {

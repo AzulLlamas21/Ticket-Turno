@@ -1,18 +1,18 @@
 document.addEventListener("DOMContentLoaded", function() {
     document.getElementById("btnGenerarPDF").addEventListener("click", function() {
         // Obtener los datos del DOM
-        let nombreCompleto = document.getElementById("nombre_completo").innerText;
-        let curp = document.getElementById("curp").innerText;
-        let nombre = document.getElementById("nombre").innerText;
-        let paterno = document.getElementById("paterno").innerText;
-        let materno = document.getElementById("materno").innerText;
-        let telefono = document.getElementById("telefono").innerText;
-        let celular = document.getElementById("celular").innerText;
-        let correo = document.getElementById("correo").innerText;
-        let nivel = document.getElementById("nivel").innerText;
-        let municipio = document.getElementById("municipio").innerText;
-        let asunto = document.getElementById("asunto").innerText;
-        let noTurno = document.getElementById("no_turno").innerText;
+        let nombreCompleto = document.getElementById("nombre_completo").innerText.split(': ')[1];
+        let curp = document.getElementById("curp").innerText.split(': ')[1];
+        let nombre = document.getElementById("nombre").innerText.split(': ')[1];
+        let paterno = document.getElementById("paterno").innerText.split(': ')[1];
+        let materno = document.getElementById("materno").innerText.split(': ')[1];
+        let telefono = document.getElementById("telefono").innerText.split(': ')[1];
+        let celular = document.getElementById("celular").innerText.split(': ')[1];
+        let correo = document.getElementById("correo").innerText.split(': ')[1];
+        let nivel = document.getElementById("nivel").innerText.split(': ')[1];
+        let municipio = document.getElementById("municipio").innerText.split(': ')[1];
+        let asunto = document.getElementById("asunto").innerText.split(': ')[1];
+        let noTurno = document.getElementById("no_turno").innerText.split(': ')[1];
 
         // Crear objeto con los datos
         let datos = {

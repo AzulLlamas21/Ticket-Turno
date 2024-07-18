@@ -26,19 +26,21 @@
 
         <div class="row">
             <div id="result">
-                <p>Nombre completo: {{ datos['nombre_completo'] }}</p>
-                <p>CURP: {{ datos['curp'] }}</p>
-                <p>Nombre: {{ datos['nombre'] }}</p>
-                <p>Paterno: {{ datos['paterno'] }}</p>
-                <p>Materno: {{ datos['materno'] }}</p>
-                <p>Teléfono: {{ datos['telefono'] }}</p>
-                <p>Celular: {{ datos['celular'] }}</p>
-                <p>Correo: {{ datos['correo'] }}</p>
-                <p>Nivel: {{ datos['nivel'] }}</p>
-                <p>Municipio: {{ datos['municipio'] }}</p>
-                <p>Asunto: {{ datos['asunto'] }}</p>
-            </div>            
+                <p id="nombre_completo">Nombre completo: {{ datos['nombre_completo'] }}</p>
+                <p id="curp">CURP: {{ datos['curp'] }}</p>
+                <p id="nombre">Nombre: {{ datos['nombre'] }}</p>
+                <p id="paterno">Paterno: {{ datos['paterno'] }}</p>
+                <p id="materno">Materno: {{ datos['materno'] }}</p>
+                <p id="telefono">Teléfono: {{ datos['telefono'] }}</p>
+                <p id="celular">Celular: {{ datos['celular'] }}</p>
+                <p id="correo">Correo: {{ datos['correo'] }}</p>
+                <p id="nivel">Nivel: {{ datos['nivel'] }}</p>
+                <p id="municipio">Municipio: {{ datos['municipio'] }}</p>
+                <p id="asunto">Asunto: {{ datos['asunto'] }}</p>
+                <p id="no_turno">Número de Turno: {{ datos['no_turno'] }}</p>
+            </div>
         </div>
+        
 
         <div class="footer">
             <a href="{{ url_for('index') }}" class="btn btn-secondary">Regresar</a>

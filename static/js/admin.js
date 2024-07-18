@@ -1,6 +1,6 @@
 function searchForm() {
     const searchQuery = document.getElementById('buscar').value;
-    window.location.href = `/search?query=${searchQuery}`;
+    window.location.href = `/admin?query=${searchQuery}`;
 }
 
 function updateForm(noTurno, idMun) {

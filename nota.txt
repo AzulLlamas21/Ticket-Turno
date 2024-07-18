@@ -6,6 +6,7 @@ Se instaló:
    pandas
    sqlalchemy
    mysql-connector-python
+   Flask-Session
 
 
 Se agrego una imagen de la BD, al igual que ticket_query
@@ -41,6 +42,7 @@ Paso por paso.
       pandas
       sqlalchemy
       mysql-connector-python
+      Flask-Session
 4. De ser necesario (si aparece el error que no se encuentra la carpeta model), escriba en la terminal lo siguiente:
    set PYTHONPATH=C:\Dirección_de_proyecto
 5. Ejecutar r.bat
